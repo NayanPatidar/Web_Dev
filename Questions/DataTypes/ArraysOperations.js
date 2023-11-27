@@ -39,4 +39,13 @@ console.log(`Array After Slicing - ${new_arr}`);
 
 // Includes 
 let present = new_arr.includes(4)
-console.log(present);
+// console.log(present);
+
+// Asynchronous Operations
+function delayedFunction(delay){
+    setTimeout(() =>{
+        console.log("Printed after 5 Sec");
+    }, delay)
+}
+
+delayedFunction(5000)
