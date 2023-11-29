@@ -14,7 +14,6 @@ span {
 }
 
 span:hover {
-    /* animation: changeColorHeading 3s infinite alternate; */
     box-shadow: 10px 10px 10px rgb(255, 255, 255), 0 10px 10px rgb(30, 30, 30), 10px 0 10px rgb(59, 59, 59); /* Adjust colors and sizes */
 
 }
@@ -78,4 +77,69 @@ span:hover {
     100% {
         color: rgb(255, 0, 221);
     }
+} */
+
+.box1 {
+    width: 60px;
+    height: 60px;
+    background-color: grey;
+    margin: 8px;
+    line-height: 60px;
+    cursor: pointer;
+
+    position: absolute;
+    left: 40.5%;
+    top: 105px
+}
+
+.box2 {
+    width: 60px;
+    height: 60px;
+    background-color: red;
+    margin: 8px;
+    line-height: 60px;
+    cursor: pointer;
+
+    position: absolute;
+    left: 47.3%;
+    top: 105px
+}
+
+/* .box3 {
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    margin: 8px;
+    line-height: 60px;
+    cursor: pointer;
+
+    position: absolute;
+    left: 40.5%;
+    top: 105px
+}
+
+.box1 {
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    margin: 8px;
+    line-height: 60px;
+    cursor: pointer;
+
+    position: absolute;
+    left: 40.5%;
+    top: 105px
+}
+
+.box1 {
+    width: 60px;
+    height: 60px;
+    background-color: transparent;
+    margin: 8px;
+    line-height: 60px;
+    cursor: pointer;
+
+    position: absolute;
+    left: 40.5%;
+    top: 105px
 } */
