@@ -9,11 +9,14 @@ body {
 span {
     vertical-align: middle;
     font-weight: 10px;
-    /* font-size: ; */
+    transition: color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+    background-color: transparent;
 }
 
 span:hover {
-    animation: changeColorHeading 3s infinite alternate;
+    /* animation: changeColorHeading 3s infinite alternate; */
+    box-shadow: 10px 10px 10px rgb(255, 255, 255), 0 10px 10px rgb(30, 30, 30), 10px 0 10px rgb(59, 59, 59); /* Adjust colors and sizes */
+
 }
 
 .Container{
@@ -23,27 +26,43 @@ span:hover {
 .Horizontal-Line-One {
     height: 6px;
     background-color: white;
-    width: 450px;
-    top: 150px;
+    width: 21%; 
     position: absolute;
+    left: 40%;
+    top: 114px;
 }
 
 .Horizontal-Line-Two {
     height: 6px;
     background-color: white;
-    width: 450px;
-    top: 300px;
+    width: 21%; 
     position: absolute;
+    left: 40%;
+    top: 200px;
 }
 
 .Vertical-Line-One {
-    border-left: 2px solid rgb(255, 255, 255);
-    height: 450px;
-    margin: -20px;
-    
+    border-left: 6px solid white;
+    height: 240px;
+    position: absolute;
+
+    right: 46%;
+    top: 40px;
 }
 
-@keyframes changeColorHeading {
+.Vertical-Line-Two {
+    border-left: 6px solid white;
+    height: 240px;
+    position: absolute;
+
+    left: 46.6%;
+    top: 40px;
+
+}
+
+
+/* Not Required */
+/* @keyframes changeColorHeading {
     0% {
         color: rgb(0, 242, 93);
     }
@@ -59,4 +78,4 @@ span:hover {
     100% {
         color: rgb(255, 0, 221);
     }
-}
+} */
