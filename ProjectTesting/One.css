@@ -1,0 +1,21 @@
+table {
+    margin: auto;
+    border-collapse: collapse;
+    /* border-right: 0px; */
+    /* border-top: 0px; */
+    /* border-right: 0px;
+    border-right: 0px; */
+
+}
+
+td {
+    padding: 50px;
+}
+
+.RowOne #1 {
+    border-bottom : 10px;
+}
+
+ /* {
+    border-bottom: 0px;
+} */
