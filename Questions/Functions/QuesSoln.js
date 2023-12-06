@@ -71,4 +71,79 @@ function factorial(number){
     }
 }
 
-console.log(`Factorial is ${factorial(10)}`);
+// console.log(`Factorial is ${factorial(10)}`);
+let present = true;
+
+function isAnagram(str1, str2) {
+    smallStr1 = str1.toLowerCase();
+    smallStr2 = str2.toLowerCase();
+    let lettersStr1 = smallStr1.split("");
+    let lettersStr2 = smallStr2.split("");
+    lettersStr1.sort();
+    lettersStr2.sort();
+    if (lettersStr1.join("") == lettersStr2.join("")){
+        return true;
+    } 
+    return false;
+}
+// console.log(isAnagram('Debit Card', 'Bad Credit'));
+
+function calculateTotalSpentByCategory(transactions) {
+    let data = []
+    let present = true;
+    transactions.forEach(element => {
+  
+        for(let i in data){
+            if (data[i].category === element["category"]){
+                data[i].totalSpent += element["price"];
+                present = false;
+            }
+        }
+        if (present){
+        let currenctObj = {category: element["category"], totalSpent: element["price"]}
+        data.push(currenctObj);
+        }
+        present = true;
+    });
+    return data;
+}
+
+let arrayObj = [
+    {
+        id: 1,
+        timestamp: 1656076800000,
+        price: 10,
+        category: 'Food',
+        itemName: 'Pizza',
+    },
+    {
+        id: 2,
+        timestamp: 1656259600000,
+        price: 20,
+        category: 'Food',
+        itemName: 'Burger',
+    },
+    {
+        id: 3,
+        timestamp: 1656019200000,
+        price: 15,
+        category: 'Clothing',
+        itemName: 'T-Shirt',
+    },
+    {
+        id: 4,
+        timestamp: 1656364800000,
+        price: 30,
+        category: 'Electronics',
+        itemName: 'Headphones',
+    },
+    {
+        id: 5,
+        timestamp: 1656105600000,
+        price: 25,
+        category: 'Clothing',
+        itemName: 'Jeans',
+    },
+];
+
+console.log(calculateTotalSpentByCategory(arrayObj));
