@@ -35,6 +35,13 @@ function objectMethod(obj){
 
     let enteries = Object.entries(obj);
     console.log("After Object.enteries():", enteries);
+
+    let hasProp = obj.hasOwnProperty("property");
+    console.log("After hasOwnPropert():", hasProp);
+
+    let newObj = Object.assign({}, obj, {Stabiliy : "Moderate"});
+    console.log("After Object.assign():", newObj);
+
 }
 
 let objec = {
@@ -43,4 +50,4 @@ let objec = {
     "Status" : true
 }
 
-objectMethod(objec)
+objectMethod(objec);
