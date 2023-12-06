@@ -15,11 +15,32 @@ const words = value.split(" ");
 
 const stringUsers = `{"name": "Nayan","age":18,"gender":"male"}`
 const user = JSON.parse(stringUsers)
-console.log(user);
+// console.log(user);
 
 const objUsers = {
     "name"   : "Harkirat",
     "age"    : 24,
     "gender" : "male",
 }
-console.log(objUsers);
+// console.log(objUsers);
+
+function objectMethod(obj){
+    console.log("Original Object:", obj);
+
+    let keys = Object.keys(obj);
+    console.log("After Object.keys():", keys);
+
+    let values = Object.values(obj);
+    console.log("After Object.values():", values);
+
+    let enteries = Object.entries(obj);
+    console.log("After Object.enteries():", enteries);
+}
+
+let objec = {
+    "Serial_Number" : 839834,
+    "Info" : "v4Connection_rqrksid",
+    "Status" : true
+}
+
+objectMethod(objec)
