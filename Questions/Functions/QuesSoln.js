@@ -201,8 +201,50 @@ class Todo {
     }
 }
 
-let todoList = new Todo();
-todoList.add('Task 1');
-todoList.add('Task 2');
-todoList.add('Task 3');
-console.log(todoList.get(3));
+// let todoList = new Todo();
+// todoList.add('Task 1');
+// todoList.add('Task 2');
+// todoList.add('Task 3');
+// console.log(todoList.get(3));
+
+class Calculator {
+    result = 0;
+
+    constructor(result){
+        this.result = result;
+    }
+
+    add(val){
+        this.result += val;
+    }
+    subtract(val){
+        this.result -= val;
+    }
+    multiply (val){
+        this.result *= val;
+    }
+    divide(val){
+        this.result /= val;
+    }
+    clear(){
+        this.result = 0;
+    }
+    getResult(){
+        return this.result;
+    }
+    calculate(expression){
+        try{
+            let ans = eval(expression);
+            return ans
+        } catch (error) {
+            throw new Error;
+        }     
+    }
+}
+
+let calc = new Calculator(0);
+calc.add(5);
+console.log(calc.getResult());
+calc.add(3);
+console.log(calc.getResult());
+// console.log(calc.calculate('5/0'));

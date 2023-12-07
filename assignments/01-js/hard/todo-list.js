@@ -27,7 +27,8 @@ class Todo {
   update(index, updatedTodo){
     if (this.todo_list.length-1 >= index){
       this.todo_list[index] = updatedTodo;
-      }  }
+      }  
+    }
 
   getAll() {
       return this.todo_list;
@@ -39,7 +40,8 @@ class Todo {
             return this.todo_list[indexOfTodo];
         } else {
             return null; 
-        }  }
+        }  
+  }
 
   clear(){
       this.todo_list.length = 0;
