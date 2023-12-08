@@ -13,7 +13,8 @@ for (let i = 1; i <= 9; i++) {
 // or pressed
 let currentImage = 'O';
 
-
+// It is used to show images 
+// while hovering
 function onHoverFunction(cellNum) {
   let cell = document.getElementById(`cell${cellNum}`);
   if (cellData.get(cellNum) === ''){
@@ -22,6 +23,8 @@ function onHoverFunction(cellNum) {
   } 
 }
 
+// It is used to remove the images when 
+// user exits the hover 
 function exitHoverFunction(cellNum) {
   let cell = document.getElementById(`cell${cellNum}`);
 
