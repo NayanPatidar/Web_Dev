@@ -1,21 +1,61 @@
 table {
     margin: auto;
     border-collapse: collapse;
-    /* border-right: 0px; */
-    /* border-top: 0px; */
-    /* border-right: 0px;
-    border-right: 0px; */
 
 }
 
 td {
     padding: 50px;
+    border-width: 5px;
 }
 
-.RowOne #1 {
-    border-bottom : 10px;
+.cell1 {
+    border-color: white;
+    border-top: none;
+    border-left: none;
 }
 
+.cell2 {
+    border-color: white;
+    border-top: none;
+}
+
+.cell3 {
+    border-color: white;
+    border-right: none;
+    border-top: none;
+}
+
+.cell4 {
+    border-color: white;
+    border-left: none;
+}
+
+.cell5 {
+    border-color: white;
+}
+
+.cell6 {
+    border-color: white;
+    border-right: none;
+}
+
+.cell7 {
+    border-color: white;
+    border-bottom: none;
+    border-left: none;
+}
+
+.cell8 {
+    border-color: white;
+    border-bottom: none;
+}
+
+.cell9 {
+    border-color: white;
+    border-right: none;
+    border-bottom: none;
+}
  /* {
     border-bottom: 0px;
 } */
