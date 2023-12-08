@@ -5,31 +5,31 @@
     </head>
 
     <body>
-        <div id="MainPage" class="MainPage">
+        <!-- The main Title -->
         <span >Tic Tac Toe</span>
 
-        <div class="Container">
-        <div class="Horizontal-Line-One"></div>
-        <div class="Horizontal-Line-Two"></div>
-        <div class="Vertical-Line-One"></div>
-        <div class="Vertical-Line-Two"></div>
-        </div>
+        <!-- The Cells for each block -->
+            <table border="1" style="border-color: black;">
+        <tr>
+            <td class="cell1" onmouseover="hoverfunction()" onclick="click(1)"></td>
+            <td class="cell2"></td>
+            <td class="cell3"></td>
+        </tr>
+        <tr>
+            <td class="cell4"></td>
+            <td class="cell5"></td>
+            <td class="cell6"></td>
+        </tr>
+        <tr>
+            <td class="cell7"></td>
+            <td class="cell8"></td>
+            <td class="cell9"></td>
+        </tr>
+    </table>
 
-        <div id="box1" class="box1" onclick="updateValue(0)"></div>
-        <div id="box2" class="box2" onclick="updateValue(1)"></div>
-        <div id="box3" class="box3" onclick="updateValue(2)"></div>
-        <div id="box4" class="box4" onclick="updateValue(3)"></div>
-        <div id="box5" class="box5" onclick="updateValue(4)"></div>
-        <div id="box6" class="box6" onclick="updateValue(5)"></div>
-        <div id="box7" class="box7" onclick="updateValue(6)"></div>
-        <div id="box8" class="box8" onclick="updateValue(7)"></div>
-        <div id="box9" class="box9" onclick="updateValue(8)"></div>
 
-        </div>
-        <!-- <div class = "imageBox" >
-            <img src="resources/O.png" alt="O" class="ImageO">
-            <img src="resources/X.png" alt="X" class="ImageX">
-        </div> -->
+
+
         <script src="script.js"></script>
     </body>
 </html>

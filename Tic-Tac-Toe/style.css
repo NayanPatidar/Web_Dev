@@ -6,13 +6,6 @@ body {
     background-color: black;
 }
 
-.MainPage{
-    /* text-align: center; */
-    /* position: relative; */
-    /* transform: translate(0%, 0%); */
-    transform-origin: center center;
-}
-
 span {
     vertical-align: middle;
     font-weight: 10px;
@@ -25,6 +18,103 @@ span:hover {
 
 }
 
+table {
+    margin: auto;
+    margin-top: 50px;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 40px;
+    border-width: 5px;
+    /* border-color: white; */
+}
+
+.cell1 {
+    border-color: white;
+    border-left: none;
+    border-top: none;
+    /* opacity: 0; */
+    /* transition: opacity 0.5s ease-in-out; */
+}
+/* 
+.cell1:hover {
+    opacity: 1;
+    background-image: url('resources/O.png');
+    background-size: cover;
+    transition: opacity 1s ease;
+} */
+
+.cell2 {
+    border-top: none;
+}
+
+.cell3 {
+    border-right: none;
+    border-top: none;
+}
+
+.cell4 {
+    border-left: none;
+}
+
+.cell5 {
+}
+
+.cell6 {
+    border-right: none;
+}
+
+.cell7 {
+    border-bottom: none;
+    border-left: none;
+}
+
+.cell8 {
+    border-bottom: none;
+}
+
+.cell9 {
+    border-right: none;
+    border-bottom: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 .Container{
     position: relative;
 }
@@ -65,8 +155,7 @@ span:hover {
     top: 40px;
 }
 
-/* Not Required */
-/* @keyframes changeColorHeading {
+@keyframes changeColorHeading {
     0% {
         color: rgb(0, 242, 93);
     }
@@ -82,7 +171,7 @@ span:hover {
     100% {
         color: rgb(255, 0, 221);
     }
-} */
+}
 
 .box1 {
     width: 60px;
@@ -99,9 +188,9 @@ span:hover {
     top: 105px
 }
 
-/* .box1:hover {
+.box1:hover {
     
-} */
+}
 
 .box2 {
     width: 60px;
@@ -191,7 +280,7 @@ span:hover {
 
     position: absolute;
     left: 47.3%;
-    top: 275px
+    top: 275px;
 }
 
 .box9 {
@@ -210,18 +299,18 @@ span:hover {
 .imageBox {
     position: relative;
     width: 80%;
-}
+} 
   
-/* .ImageO,
+.ImageO,
 .ImageX {
     display: none;   
     position: absolute;
     top: 0;
     left: 0;
 } 
-*/
+
   
-/* .imageBox:hover .ImageO,
+.imageBox:hover .ImageO,
 .imageBox:hover .ImageX {
     display: block; 
 }
@@ -231,5 +320,5 @@ span:hover {
 .ImageX {
     width: 50%; 
     height: 50px; 
-} */
-  
+} 
+*/
