@@ -28,20 +28,21 @@ td {
     padding: 40px;
     border-width: 5px;
     border-color: white;
+    background-size: cover;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
 }
 
 #cell1 {
     border-color: white;
     border-left: none;
     border-top: none;
-    /* opacity: 0; */
-    /* transition: opacity 0.5s ease-in-out; */
+
 }
 /* 
 .cell1:hover {
     opacity: 1;
     background-image: url('resources/O.png');
-    background-size: cover;
     transition: opacity 1s ease;
 } */
 
