@@ -27,10 +27,10 @@ table {
 td {
     padding: 40px;
     border-width: 5px;
-    /* border-color: white; */
+    border-color: white;
 }
 
-.cell1 {
+#cell1 {
     border-color: white;
     border-left: none;
     border-top: none;
@@ -45,36 +45,36 @@ td {
     transition: opacity 1s ease;
 } */
 
-.cell2 {
+#cell2 {
     border-top: none;
 }
 
-.cell3 {
+#cell3 {
     border-right: none;
     border-top: none;
 }
 
-.cell4 {
+#cell4 {
     border-left: none;
 }
 
-.cell5 {
+#cell5 {
 }
 
-.cell6 {
+#cell6 {
     border-right: none;
 }
 
-.cell7 {
+#cell7 {
     border-bottom: none;
     border-left: none;
 }
 
-.cell8 {
+#cell8 {
     border-bottom: none;
 }
 
-.cell9 {
+#cell9 {
     border-right: none;
     border-bottom: none;
 }
