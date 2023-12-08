@@ -59,7 +59,6 @@ span:hover {
 
 }
 
-
 /* Not Required */
 /* @keyframes changeColorHeading {
     0% {
@@ -92,6 +91,10 @@ span:hover {
     top: 105px
 }
 
+.box1:hover {
+    
+}
+
 .box2 {
     width: 60px;
     height: 60px;
@@ -117,7 +120,6 @@ span:hover {
     left: 54.3%;
     top: 105px
 }
-
 
 .box4 {
     width: 60px;
@@ -158,7 +160,6 @@ span:hover {
     top: 190px
 }
 
-
 .box7 {
     width: 60px;
     height: 60px;
@@ -196,4 +197,31 @@ span:hover {
     position: absolute;
     left: 54.3%;
     top: 275px
+}    
+
+.imageBox {
+    position: relative;
+    width: 80%;
 }
+  
+/* .ImageO,
+.ImageX {
+    display: none;   
+    position: absolute;
+    top: 0;
+    left: 0;
+} 
+*/
+  
+/* .imageBox:hover .ImageO,
+.imageBox:hover .ImageX {
+    display: block; 
+}
+  
+
+.ImageO,
+.ImageX {
+    width: 50%; 
+    height: 50px; 
+} */
+  
