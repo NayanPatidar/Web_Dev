@@ -71,4 +71,180 @@ function factorial(number){
     }
 }
 
-console.log(`Factorial is ${factorial(10)}`);
+// console.log(`Factorial is ${factorial(10)}`);
+let present = true;
+
+function isAnagram(str1, str2) {
+    smallStr1 = str1.toLowerCase();
+    smallStr2 = str2.toLowerCase();
+    let lettersStr1 = smallStr1.split("");
+    let lettersStr2 = smallStr2.split("");
+    lettersStr1.sort();
+    lettersStr2.sort();
+    if (lettersStr1.join("") == lettersStr2.join("")){
+        return true;
+    } 
+    return false;
+}
+// console.log(isAnagram('Debit Card', 'Bad Credit'));
+
+function calculateTotalSpentByCategory(transactions) {
+    let data = []
+    let present = true;
+    transactions.forEach(element => {
+  
+        for(let i in data){
+            if (data[i].category === element["category"]){
+                data[i].totalSpent += element["price"];
+                present = false;
+            }
+        }
+        if (present){
+        let currenctObj = {category: element["category"], totalSpent: element["price"]}
+        data.push(currenctObj);
+        }
+        present = true;
+    });
+    return data;
+}
+
+let arrayObj = [
+    {
+        id: 1,
+        timestamp: 1656076800000,
+        price: 10,
+        category: 'Food',
+        itemName: 'Pizza',
+    },
+    {
+        id: 2,
+        timestamp: 1656259600000,
+        price: 20,
+        category: 'Food',
+        itemName: 'Burger',
+    },
+    {
+        id: 3,
+        timestamp: 1656019200000,
+        price: 15,
+        category: 'Clothing',
+        itemName: 'T-Shirt',
+    },
+    {
+        id: 4,
+        timestamp: 1656364800000,
+        price: 30,
+        category: 'Electronics',
+        itemName: 'Headphones',
+    },
+    {
+        id: 5,
+        timestamp: 1656105600000,
+        price: 25,
+        category: 'Clothing',
+        itemName: 'Jeans',
+    },
+];
+
+// console.log(calculateTotalSpentByCategory(arrayObj));
+
+function countVowels(str) {
+    smallStr= str.toLowerCase();
+    let letters = smallStr.split("");
+    let val = 0;
+    letters.forEach(element => {
+        if ((element === "a") || (element === "e") || (element === "i")
+            || (element === "o") || (element === "u")){
+            val++;
+        }
+    });
+    return val;
+}
+
+// console.log(countVowels("hello"));
+
+class Todo {
+  
+    todo_list = [];
+  
+    constructor(){
+    }
+
+    add(todo){
+        this.todo_list.push(todo);
+    }
+
+    remove(indexOfTodo) {
+        this.todo_list.splice(indexOfTodo, 1)
+    }
+
+    update(index, updatedTodo){
+        if (this.todo_list.length-1 >= index){
+        this.todo_list[index] = updatedTodo;
+        }
+    }
+
+    getAll() {
+        return this.todo_list;
+    }
+
+    get(indexOfTodo){
+        if (indexOfTodo <= todoList.length-1){
+            return this.todo_list[indexOfTodo];
+        } else {
+            return null; 
+        }
+    }
+
+    clear(){
+        this.todo_list.length = 0;
+    }
+}
+
+// let todoList = new Todo();
+// todoList.add('Task 1');
+// todoList.add('Task 2');
+// todoList.add('Task 3');
+// console.log(todoList.get(3));
+
+class Calculator {
+    result = 0;
+
+    constructor(result){
+        this.result = result;
+    }
+
+    add(val){
+        this.result += val;
+    }
+    subtract(val){
+        this.result -= val;
+    }
+    multiply (val){
+        this.result *= val;
+    }
+    divide(val){
+        this.result /= val;
+    }
+    clear(){
+        this.result = 0;
+    }
+    getResult(){
+        return this.result;
+    }
+    calculate(expression){
+        try{
+            let ans = eval(expression);
+            return ans
+        } catch (error) {
+            throw new Error;
+        }     
+    }
+}
+
+let calc = new Calculator(0);
+calc.add(5);
+console.log(calc.getResult());
+calc.add(3);
+console.log(calc.getResult());
+// console.log(calc.calculate('5/0'));
