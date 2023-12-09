@@ -5,7 +5,7 @@ let cellData = new Map();
 // It initializes the cellData for 
 // all the 9 cells 
 for (let i = 1; i <= 9; i++) {
-  cellData.set(i, '');
+  cellData.set(i, ['', '']);
 }
 
 // It refers to the image which
@@ -13,23 +13,31 @@ for (let i = 1; i <= 9; i++) {
 // or pressed
 let currentImage = 'O';
 
+//To keep a check if winner has been found
+let winnerFound = false;
+
 // It is used to show images 
 // while hovering
 function onHoverFunction(cellNum) {
+  if (!winnerFound){
   let cell = document.getElementById(`cell${cellNum}`);
-  if (cellData.get(cellNum) === ''){
+  let cellValues = cellData.get(cellNum);
+  if (cellValues[0] === ''){
   cell.style.opacity = 1;
   cell.style.backgroundImage = hoverImageSelector();
+  }
   } 
 }
 
 // It is used to remove the images when 
 // user exits the hover 
 function exitHoverFunction(cellNum) {
+  if (!winnerFound){
   let cell = document.getElementById(`cell${cellNum}`);
-
-  if (cellData.get(cellNum) === ''){
+  let cellValues = cellData.get(cellNum);
+  if (cellValues[0] === ''){
   cell.style.backgroundImage = `none`;
+  }
   }
 }
 
@@ -37,11 +45,13 @@ function exitHoverFunction(cellNum) {
 // clicked. It is executed only when the cell
 // is completely empty
 function onClickFunction(cellNum){
-
-  if (cellData.get(cellNum) === ''){
-    cellData.set(cellNum,'Yes');
+  if (!winnerFound && cellData.get(cellNum)[0] === ''){
+    cellData.set(cellNum,['Yes', `${currentImage}`]);
     let cell = document.getElementById(`cell${cellNum}`);
     cell.style.backgroundImage = pressImageSelector();
+
+    checkWinner();
+
     characterInvert();
   }
 }
@@ -75,4 +85,47 @@ function characterInvert(){
   } else if ( currentImage === 'O'){
     currentImage = 'X';
   }
+}
+
+function checkWinner(){
+  cellData.forEach((value, key) => {
+    let [value1, value2] = value;
+    console.log(`${key} : ${value1} - ${value2}`);
+  });
+
+  if ((cellData.get(1)[1] === 'O' && cellData.get(2)[1] === 'O' && cellData.get(3)[1] === 'O') ||
+      (cellData.get(1)[1] === 'X' && cellData.get(2)[1] === 'X' && cellData.get(3)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } 
+  else if ((cellData.get(4)[1] === 'O' && cellData.get(5)[1] === 'O' && cellData.get(6)[1] === 'O') ||
+           (cellData.get(4)[1] === 'X' && cellData.get(5)[1] === 'X' && cellData.get(6)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } else if ((cellData.get(7)[1] === 'O' && cellData.get(8)[1] === 'O' && cellData.get(9)[1] === 'O') ||
+             (cellData.get(7)[1] === 'X' && cellData.get(8)[1] === 'X' && cellData.get(9)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } else if ((cellData.get(1)[1] === 'O' && cellData.get(4)[1] === 'O' && cellData.get(7)[1] === 'O') ||
+             (cellData.get(1)[1] === 'X' && cellData.get(4)[1] === 'X' && cellData.get(7)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } 
+  else if ((cellData.get(2)[1] === 'O' && cellData.get(5)[1] === 'O' && cellData.get(8)[1] === 'O') ||
+           (cellData.get(2)[1] === 'X' && cellData.get(5)[1] === 'X' && cellData.get(8)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } else if ((cellData.get(3)[1] === 'O' && cellData.get(6)[1] === 'O' && cellData.get(9)[1] === 'O') ||
+             (cellData.get(3)[1] === 'X' && cellData.get(6)[1] === 'X' && cellData.get(9)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+  } else if ((cellData.get(1)[1] === 'O' && cellData.get(5)[1] === 'O' && cellData.get(9)[1] === 'O') ||
+             (cellData.get(1)[1] === 'X' && cellData.get(5)[1] === 'X' && cellData.get(9)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+} else if ((cellData.get(3)[1] === 'O' && cellData.get(5)[1] === 'O' && cellData.get(7)[1] === 'O') ||
+           (cellData.get(3)[1] === 'X' && cellData.get(5)[1] === 'X' && cellData.get(7)[1] === 'X')){
+        console.log(`Winner is ${currentImage}`);
+        winnerFound = true;
+} 
 }
