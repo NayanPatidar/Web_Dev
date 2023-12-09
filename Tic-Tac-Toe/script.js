@@ -131,11 +131,39 @@ function checkWinner(){
 
 if (winnerFound){
   printWinner();
+} else {
+  tieCheck();
 }
 }
 
 function printWinner(){
   let winnerSpan = document.getElementById('GameStatus');
-  winnerSpan.innerText = `${currentImage} -  WON THE GAME !!`;
+  winnerSpan.innerText = `${currentImage} -  WON THE GAME !!`; 
+}
+
+function printTie(){
   
+}
+
+function tieCheck(){
+  let blankPresent = false;
+    for (let i = 1; i <= 9; i++) {
+      if (cellData.get(i)[1] === ''){
+        blankPresent = true;
+      } 
+  }
+  if (!blankPresent){
+    printTie();
+  }
+}
+
+function restartGame(){
+  winnerFound = false;
+  for (let i = 1; i <= 9; i++) {
+    cellData.set(i, ['', '']);
+    let cell = document.getElementById(`cell${i}`);
+    cell.style.backgroundImage = 'none';
+  }
+  let winnerSpan = document.getElementById('GameStatus');
+  winnerSpan.innerText = ``;
 }
