@@ -142,7 +142,8 @@ function printWinner(){
 }
 
 function printTie(){
-  
+  let winnerSpan = document.getElementById('GameStatus');
+  winnerSpan.innerText = `TIE !!`; 
 }
 
 function tieCheck(){
