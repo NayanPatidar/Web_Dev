@@ -128,4 +128,14 @@ function checkWinner(){
         console.log(`Winner is ${currentImage}`);
         winnerFound = true;
 } 
+
+if (winnerFound){
+  printWinner();
+}
+}
+
+function printWinner(){
+  let winnerSpan = document.getElementById('GameStatus');
+  winnerSpan.innerText = `${currentImage} -  WON THE GAME !!`;
+  
 }
