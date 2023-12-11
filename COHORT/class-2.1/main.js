@@ -32,14 +32,14 @@ function couterTwo(current,time){
 
 const fs = require('fs');
 
-fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (err, data) => {
-    if (err) {
-        console.error(`Error reading the file: ${err}`);
-        return;
-    }
+// fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (err, data) => {
+//     if (err) {
+//         console.error(`Error reading the file: ${err}`);
+//         return;
+//     }
 
-    console.log(`File Content: ${data}`);
-});
+//     // console.log(`File Content: ${data}`);
+// });
 
 // for (let i = 0; i < 100000; i++) {
 //     console.log(i);
@@ -50,11 +50,35 @@ fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt
 
 let dataToAdd = "\nYoo keep going !!";
 
-fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', dataToAdd, (err, data) => {
-    if (err) {
-        console.error(`Error reading the file: ${err}`);
-        return;
-    }
+// fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', dataToAdd, (err, data) => {
+//     if (err) {
+//         console.error(`Error reading the file: ${err}`);
+//         return;
+//     }
 
-    console.log(`File Content: ${data}`);
+//     console.log(`File Content: ${data}`);
+// })
+
+// Remove spaces from file 
+
+let dataFromFiles = "";
+let newData = "";
+
+function removeSpaces(inputString) {
+    return inputString.replace(/ +/g, ' ');
+}
+
+fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (error, data) => {
+    if (error != null){
+        log.error("We got error");
+    } else {
+    dataFromFiles = data;
+    newData = removeSpaces(dataFromFiles);
+    console.log(`Data to Add : ${newData}`);
+    fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', newData, (err, data) => {    });
+    }
 })
+
+
+  
+  
