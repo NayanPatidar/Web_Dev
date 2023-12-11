@@ -41,6 +41,20 @@ fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt
     console.log(`File Content: ${data}`);
 });
 
-for (let i = 0; i < 100000; i++) {
-    console.log(i);
-}
+// for (let i = 0; i < 100000; i++) {
+//     console.log(i);
+// }
+
+
+// Adding the content to the file
+
+let dataToAdd = "\nYoo keep going !!";
+
+fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', dataToAdd, (err, data) => {
+    if (err) {
+        console.error(`Error reading the file: ${err}`);
+        return;
+    }
+
+    console.log(`File Content: ${data}`);
+})
