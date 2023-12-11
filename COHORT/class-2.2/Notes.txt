@@ -1,0 +1,19 @@
+What is ECMA Script?
+What is Javscript?
+What is Node.js?
+What is Bum?
+
+ECMA Script - Guidelines for the people which are creating the 
+compiler of the Javscript.
+
+Javscript - It is a Scripting language which is the mst widely know implementation
+of the Javscript. Popular compilers - V8(chrome) , SpiderMoney(Firefox)
+
+Node.js - V8 Engine + (More Backend Engines) - To create a new runtime
+
+HTTP Server - Hyper Text Transfer Protocol :- Helps machine to communicate 
+                                           :- Helps fronted and backend to communicate
+
+Create a simple http server in c from scratch 
+Create a todo appllication where you store data in the file
+Create a rust/ golang/ java http server
