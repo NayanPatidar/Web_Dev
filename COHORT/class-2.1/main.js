@@ -26,5 +26,21 @@ function couterTwo(current,time){
         }, 1000);
 }
 
-couterTwo(1,5)
+// couterTwo(1,5)
 
+// Reading a file operation
+
+const fs = require('fs');
+
+fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (err, data) => {
+    if (err) {
+        console.error(`Error reading the file: ${err}`);
+        return;
+    }
+
+    console.log(`File Content: ${data}`);
+});
+
+for (let i = 0; i < 100000; i++) {
+    console.log(i);
+}
