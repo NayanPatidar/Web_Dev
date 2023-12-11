@@ -26,7 +26,6 @@ function couterTwo(current,time){
         }, 1000);
 }
 
-const { log } = require('console');
 // couterTwo(1,5)
 
 // Reading a file operation
@@ -34,14 +33,14 @@ const { log } = require('console');
 const fs = require('fs');
 const { CLIENT_RENEG_WINDOW } = require('tls');
 
-// fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (err, data) => {
-//     if (err) {
-//         console.error(`Error reading the file: ${err}`);
-//         return;
-//     }
+fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (err, data) => {
+    if (err) {
+        console.error(`Error reading the file: ${err}`);
+        return;
+    }
 
-//     // console.log(`File Content: ${data}`);
-// });
+    // console.log(`File Content: ${data}`);
+});
 
 // for (let i = 0; i < 100000; i++) {
 //     console.log(i);
@@ -52,38 +51,38 @@ const { CLIENT_RENEG_WINDOW } = require('tls');
 
 let dataToAdd = "\nYoo keep going !!";
 
-// fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', dataToAdd, (err, data) => {
-//     if (err) {
-//         console.error(`Error reading the file: ${err}`);
-//         return;
-//     }
+fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', dataToAdd, (err, data) => {
+    if (err) {
+        console.error(`Error reading the file: ${err}`);
+        return;
+    }
 
-//     console.log(`File Content: ${data}`);
-// })
+    console.log(`File Content: ${data}`);
+})
 
 
 //Medium
 
 // Remove spaces from file 
 
-// let dataFromFiles = "";
-// let newData = "";
+let dataFromFiles = "";
+let newData = "";
 
-// function removeSpaces(inputString) {
-//     return inputString.replace(/ +/g, ' ');
-// }
+function removeSpaces(inputString) {
+    return inputString.replace(/ +/g, ' ');
+}
 
-// fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (error, data) => {
-//     if (error != null){
-//         log.error("We got error");
-//     } else {
-//     dataFromFiles = data;
-//     newData = removeSpaces(dataFromFiles);
-//     console.log(`Data to Add : ${newData}`);
-//     fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', newData, (err, data) => { 
-//      });
-//     }
-// })
+fs.readFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', 'utf8', (error, data) => {
+    if (error != null){
+        log.error("We got error");
+    } else {
+    dataFromFiles = data;
+    newData = removeSpaces(dataFromFiles);
+    console.log(`Data to Add : ${newData}`);
+    fs.appendFile('/media/nayan/Core 1/Javascript/Web_Dev/COHORT/class-2.1/Texting.txt', newData, (err, data) => { 
+     });
+    }
+})
 
 
 // Using 1-counter.md or 2-counter.md from the easy section, can you create a clock that shows you the current machine time?
@@ -92,7 +91,7 @@ let dataToAdd = "\nYoo keep going !!";
 
 // 1] HH:MM::SS (Eg. 13:45:23)
 
-// 2] HH:MM::SS AM/PM (Eg 01:45:23 PM)
+// 2]HH:MM::SS AM/PM (Eg 01:45:23 PM)
   
 // 1]
 
@@ -119,3 +118,4 @@ function counter(){
         }, 1000);
 }
 counter();
+
