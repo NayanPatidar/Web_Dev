@@ -1,8 +1,11 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu , Tray } = require('electron');
 const path = require('path');
 
+let mainWindow;
+let tray;
+
 function createMainWindow() {
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 400,
         resizable: false
@@ -14,9 +17,14 @@ function createMainWindow() {
         event.preventDefault();
         mainWindow.hide();
     });
+
+    tray = new Tray('Icon.png');
+
 }
 
 app.whenReady().then(() => {
     createMainWindow();
-})
+    // createTray();
+});
 
+function createTray() {
