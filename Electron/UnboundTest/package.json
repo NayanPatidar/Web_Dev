@@ -1,7 +1,7 @@
 {
   "name": "unbound",
   "version": "1.0.0",
-  "description": "",
+  "description": "Testing Unbound",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
