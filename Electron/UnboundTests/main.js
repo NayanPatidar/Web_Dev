@@ -1,3 +1,4 @@
+const { log } = require('console');
 const { app, BrowserWindow, Menu , Tray } = require('electron');
 const path = require('path');
 
@@ -13,9 +14,11 @@ function createMainWindow() {
     Menu.setApplicationMenu(null);
     mainWindow.loadFile(path.join(__dirname, "./src/GUI/index.html"));
 
-    app.on('before-quit', function(event) {
-        event.preventDefault();
-        mainWindow.hide()
+    mainWindow.on( 'close' ,(e) => {
+        e.preventDefault();
+        mainWindow.hide();
+        console.log("Not closing");
+
     });
 }
 
@@ -30,13 +33,6 @@ app.whenReady().then(() => {
             mainWindow.show();
         }
     });
-
 });
 
-app.on('activate', function () {
-    if (mainWindow === null) {
-        createMainWindow();
-    } else {
-        mainWindow.show();
-    }
-});
+

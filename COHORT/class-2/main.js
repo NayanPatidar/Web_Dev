@@ -24,7 +24,7 @@ function testingCallback(callback) {
 const prom = new Promise((resolve, reject) => {
     setTimeout(() => {
        resolve(
-        console.log("PLAY!_")x
+        console.log("PLAY!_")
        ) 
     }, 3000);
 })
