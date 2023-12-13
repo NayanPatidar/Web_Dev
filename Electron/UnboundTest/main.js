@@ -9,9 +9,10 @@ let isQuitting = false;
 function createMainWindow(){
 	mainWindow = new BrowserWindow({
 		width: 800,
-		height: 600,
-		resizable: false
+		height: 425,
+		resizable: false,
 	});
+	Menu.setApplicationMenu(null);
 
 
 	mainWindow.loadFile('src/GUI/index.html')
