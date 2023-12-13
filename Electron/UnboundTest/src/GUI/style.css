@@ -1,0 +1,10 @@
+.SettingBar ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.SettingBar ul li img{
+    width: 25px;
+    height: 25px;
+}

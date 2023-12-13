@@ -15,7 +15,8 @@ function createMainWindow(){
 	Menu.setApplicationMenu(null);
 
 
-	mainWindow.loadFile('src/GUI/index.html')
+	mainWindow.loadFile(path.join(__dirname, 'src/GUI/index.html'));
+	mainWindow.webContents.openDevTools();
 
 	mainWindow.on('minimize', function(event) {
 		event.preventDefault();
