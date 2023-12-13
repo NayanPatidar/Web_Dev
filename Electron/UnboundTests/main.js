@@ -13,18 +13,30 @@ function createMainWindow() {
     Menu.setApplicationMenu(null);
     mainWindow.loadFile(path.join(__dirname, "./src/GUI/index.html"));
 
-    mainWindow.on('close', function(event) {
+    app.on('before-quit', function(event) {
         event.preventDefault();
-        mainWindow.hide();
+        mainWindow.hide()
     });
-
-    tray = new Tray('Icon.png');
-
 }
 
 app.whenReady().then(() => {
     createMainWindow();
-    // createTray();
+    tray = new Tray(path.join(__dirname, 'Icon.png'));
+
+    tray.on('click', () => {
+        if (mainWindow.isVisible()) {
+            mainWindow.hide();
+        } else {
+            mainWindow.show();
+        }
+    });
+
 });
 
-function createTray() {
+app.on('activate', function () {
+    if (mainWindow === null) {
+        createMainWindow();
+    } else {
+        mainWindow.show();
+    }
+});
