@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 require('dotenv').config();
 
-let accessToken = process.env.SPOTIFY_ACCESS_TOKEN;
+let accessToken = process.env.SPOTIFY_ACCESS_TOKEN_USERDETAILS;
 
 fetch('https://api.spotify.com/v1/me', {
   headers: {
