@@ -1,7 +1,7 @@
 import { redirectToAuthCodeFlow } from "./auth";
 import { getAccessToken } from "./token";
 
-const clientId = "db1fe2bc4eff499baad2edef1fd8bc29"; // Replace with your client ID
+const clientId = ""; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
