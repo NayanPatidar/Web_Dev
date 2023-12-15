@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 
 const accessToken = process.env.SPOTIFY_ACCESS_TOKEN_PLAYLIST;
-console.log(accessToken);
-fetch('https://api.spotify.com/v1/me/player/recently-played', {
+
+fetch('https://api.spotify.com/v1/me/playlists', {
   headers: {
     'Authorization': `Bearer ${accessToken}`
   }
