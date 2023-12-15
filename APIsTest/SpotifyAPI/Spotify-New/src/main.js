@@ -5,13 +5,14 @@ const querystring = require('querystring');
 require('dotenv').config();
 
 const app = express();
-const port = 5173;
+const port = 5172;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
 const scopesUserDetails = 'user-read-private user-read-email';
 const scopesRecentlyPlayed = 'user-read-recently-played';
+const playlistRead = 'playlist-read-private';
 
 app.get('/login', (req, res) => {
     redirectToAuthCodeFlow(res);
@@ -46,7 +47,7 @@ function redirectToAuthCodeFlow(res) {
     querystring.stringify({
       response_type: 'code',
       client_id: clientId,
-      scope: scopesRecentlyPlayed,
+      scope: playlistRead,
       redirect_uri: redirectUri
     }));
   }
