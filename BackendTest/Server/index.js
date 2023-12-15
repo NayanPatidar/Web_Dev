@@ -29,6 +29,13 @@ app.put('/', (req, res) => {
     }
 })
 
+app.delete('/', (req, res) => {
+    const deleteData = req.body;
+    const nameToPatient = deleteData.Name; 
+    deleteFunct(nameToPatient);
+    res.send("Data Deleted !!");
+})
+
 app.listen(3000);
 
 function checkForDuplicateData(incomingData){
@@ -52,3 +59,6 @@ function updateData(dataToUpdate) {
     return updated;
 }
 
+function deleteFunct(deleteData){
+    data = data.filter((element) => element.Name !== deleteData);
+}
