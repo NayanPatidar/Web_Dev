@@ -13,6 +13,7 @@ const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
 const scopesUserDetails = 'user-read-private user-read-email';
 const scopesRecentlyPlayed = 'user-read-recently-played';
 const playlistRead = 'playlist-read-private';
+const libraryRead = 'user-library-read';
 
 app.get('/login', (req, res) => {
     redirectToAuthCodeFlow(res);
@@ -47,7 +48,7 @@ function redirectToAuthCodeFlow(res) {
     querystring.stringify({
       response_type: 'code',
       client_id: clientId,
-      scope: playlistRead,
+      scope: libraryRead,
       redirect_uri: redirectUri
     }));
   }
