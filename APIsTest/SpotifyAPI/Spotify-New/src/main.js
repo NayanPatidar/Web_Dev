@@ -10,7 +10,8 @@ const port = 5173;
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const redirectUri = process.env.SPOTIFY_REDIRECT_URI;
-const scopes = 'user-read-private user-read-email';
+const scopesUserDetails = 'user-read-private user-read-email';
+const scopesRecentlyPlayed = 'user-read-recently-played';
 
 app.get('/login', (req, res) => {
     redirectToAuthCodeFlow(res);
@@ -45,7 +46,7 @@ function redirectToAuthCodeFlow(res) {
     querystring.stringify({
       response_type: 'code',
       client_id: clientId,
-      scope: scopes,
+      scope: scopesRecentlyPlayed,
       redirect_uri: redirectUri
     }));
   }
