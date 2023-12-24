@@ -1,10 +1,27 @@
 .SettingBar ul {
     list-style: none;
-    padding: 0px;
-    margin: 0px;
+    position: absolute;
+    padding-left:0px;
+    bottom:0;
 }
 
 .SettingBar ul li img{
     width: 25px;
-    height: 25px;
+    height: 25px; 
+    position: absolute;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.SettingBar ul li img:hover {
+    width: 30px;
+    height: 30px;
+}
+
+#settingIcon img {
+    bottom:30px;
+}
+
+#helpIcon img {
+    bottom:0px;
 }
