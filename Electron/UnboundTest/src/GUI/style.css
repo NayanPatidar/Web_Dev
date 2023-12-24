@@ -1,7 +1,23 @@
+body {
+    margin: 0px;
+}
+
+.Container {
+    display: flex;
+}
+
+.SettingBar {
+    background-color: #14453D;
+    height: 89.5vh;
+    width: 50px;
+    margin-top: 10.5vh;
+}
+
 .SettingBar ul {
     list-style: none;
     position: absolute;
-    padding-left:0px;
+    padding-left:25px;
+    padding-right:12px;
     bottom:0;
 }
 
@@ -11,6 +27,7 @@
     position: absolute;
     display: block;
     transition: all 0.3s ease;
+    transform: translate(-50%)
 }
 
 .SettingBar ul li img:hover {
@@ -19,9 +36,25 @@
 }
 
 #settingIcon img {
-    bottom:30px;
+    bottom:32px;
 }
 
 #helpIcon img {
     bottom:0px;
 }
+
+.NavigationBar {
+    inset-block:inherit;
+    background-color: #3D7068;
+    height: 89.5vh;
+    width: 250px;
+    margin-top: 10.5vh;
+}
+
+.ContentBar {
+    background-color: #14453D;
+    height: 89.5vh;
+    width: 500px;
+    margin-top: 10.5vh;
+}
+
