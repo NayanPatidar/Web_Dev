@@ -41,3 +41,4 @@ function success(){
 function failure(){
     console.log(`It is failed!!`);
 }
+
