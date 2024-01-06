@@ -40,6 +40,25 @@ app.post('/todos', (req, res) => {
     data.push(req.body);
 })
 
+app.put('/todos/:id', (req, res) => {
+    const todoId = req.params.id;
+    const updatedTodo = req.body;
+
+    const index = data.findIndex((todo) => todo.id == todoId);
+
+    if (index !== -1){
+        data[index] = {...data[index], ...updatedTodo};
+        res.status(200).send('UPDATED !');
+    }else {
+        res.status(404).send('Not Found');
+    }
+})
+
+app.delete('/todos/:id', (req, res) => {
+    const todoId = req.params.id;
+    
+})
+
 
 app.listen(port, () => {
     console.log(`Server is running on the port ${port}`);
