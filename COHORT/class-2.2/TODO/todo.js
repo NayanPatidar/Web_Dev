@@ -49,6 +49,7 @@ app.put('/todos/:id', (req, res) => {
     if (index !== -1){
         data[index] = {...data[index], ...updatedTodo};
         res.status(200).send('UPDATED !');
+        return;
     }else {
         res.status(404).send('Not Found');
     }
@@ -56,9 +57,17 @@ app.put('/todos/:id', (req, res) => {
 
 app.delete('/todos/:id', (req, res) => {
     const todoId = req.params.id;
-    
-})
+    const index = data.findIndex((todo) => todo.id == todoId);
 
+    if(index !== -1){
+        data.splice(index, 1);
+        res.status(200).send("DELETED !");
+    } else {
+        res.status(404).send("Todo Not Found To Be Deleted !");
+    }
+
+
+})
 
 app.listen(port, () => {
     console.log(`Server is running on the port ${port}`);
