@@ -11,6 +11,9 @@ app.get('/files', (req, res) => {
         .then(data => {
             res.status(200).send(data)
         })
+        .catch(err => {
+            res.status(500).send('Internal Server Error');
+        })
 })
 
 app.get('/file/:filename', (req, res) => {
@@ -20,9 +23,13 @@ app.get('/file/:filename', (req, res) => {
             res.status(200).send(data);
         })
         .catch(err => {
-            res.status(400).send("File not found");
+            res.status(404).send("File not found");
         });
 })
+
+app.get('*', (req, res) => {
+  res.status(404).send('Route not found');
+});
 
 app.listen(port, ()=> {
     console.log(`Listening on the port ${port}`);
