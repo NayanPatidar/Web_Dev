@@ -3,6 +3,7 @@
     padding: 0;
     font-family: 'Poppins', sans-serif;
     box-sizing: border-box;
+    background-color: transparent;
 }
 
 body {
@@ -14,12 +15,81 @@ body {
 .Container {
     display: flex;
     flex-direction: row;
-    justify-content: 
+    justify-content:space-between;
+    margin-top: 50px;
+    /* align-items: stretch; */
 }
-
 
 /* --------------------SettingBar---------------------- */
 
 .SettingBar {
-    max-width: ;
+    position: relative;
+    max-width: 50px;
+    background-color: #696969;
+    border-radius: 0px 15px 15px 0px;
+    border: 1px solid #E0F2FF;
+    background: #161620;    width: 50px;
+    height: 358px;
 }
+
+.SettingBar ul {
+    position: absolute;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    bottom: 0;
+    width: 100%;
+}
+
+.SettingBar ul li {
+    max-width: 50px;
+    /* transform: translateX(10px); */
+
+}
+
+#helpIcon img{
+    width: 20px;
+    height: 45px;
+    margin-bottom: 5px;
+    transition: width 0.5s height 0.5s ;
+    transition: all 0.1s ease ;
+
+}
+
+#helpIcon img:hover{
+    width: 23px;
+}
+
+#settingIcon img{
+    width: 25px;
+    height: 45px;    
+    transition: all 0.1s ease ;
+}
+
+#settingIcon img:hover{
+    width: 28px;
+}
+
+
+
+/* --------------------NavigationBar--------------------- */
+
+.NavigationBar {
+    max-width: 250px;
+    width: 250px;
+    height: 358px;
+    border-radius: 15px;
+    border: 1px solid #E0F2FF;
+    background: #161620;}
+
+/* -----------------------ContentBar----------------------- */
+
+.ContentBar {
+    max-width: 500px;
+    width: 500px;
+    height: 358px;
+    border-radius: 15px;
+    border: 1px solid #E0F2FF;
+    background: #161620;}
