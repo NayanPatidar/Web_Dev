@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Tray, nativeImage } = require('electron');
+const { app, BrowserWindow, Menu, Tray, nativeImage, ipcMain } = require('electron');
 const { findSourceMap } = require('module');
 const path = require('path')
 
@@ -9,7 +9,13 @@ let isQuitting = false;
 function createMainWindow(){
 	mainWindow = new BrowserWindow({
 		width: 800,
-		height: 425,
+		height: 400,
+        frame: false,
+        webPreferences: {
+            nodeIntegration: true,
+			contextIsolation: false,
+
+        },
 		resizable: false,
 	});
 	Menu.setApplicationMenu(null);
@@ -73,4 +79,16 @@ app.on('activate', function () {
 		mainWindow.show();
 	}
 })
+
+ipcMain.on('minimize-window', () => {
+    if (mainWindow) {
+        mainWindow.minimize();
+    }
+});
+
+ipcMain.on('close-window', () => {
+    if (mainWindow) {
+		mainWindow.hide();
+    }
+});
 
