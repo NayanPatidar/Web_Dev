@@ -151,11 +151,11 @@ body {
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #0034b7;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #0034b7;
   }
   
   input:checked + .slider:before {
@@ -201,7 +201,6 @@ body {
     height: 30px;
     padding-top: 5px;
     /* color: white; */
-    font-size: 18px;
     margin-top: 8px;
 
     background-color: #fff;
@@ -212,10 +211,11 @@ body {
     font-weight: 300;
     line-height: normal;
     border-radius: 25px;
+    transition: all 0.1s ease ;
 }
 
 .features ul li input[type="radio"] {
-    /* display: none; */
+    display: none;
 }
 
 /* -----------------------ContentBar----------------------- */
