@@ -73,3 +73,4 @@ app.on('activate', function () {
 		mainWindow.show();
 	}
 })
+

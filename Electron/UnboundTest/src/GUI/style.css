@@ -82,7 +82,141 @@ body {
     height: 358px;
     border-radius: 15px;
     border: 1px solid #E0F2FF;
-    background: #161620;}
+    background: #161620;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.onOff {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin-top: 20px;
+    color: white;
+}
+
+.onOff h2 {
+    color: #FFF;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+#Client {
+    padding-left: 40px;
+}
+
+#Server {
+    padding-right: 40px;
+}
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(22px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .features {
+    width: 80%;
+    height: 80%;
+    align-self: center;
+    /* align-items: center; */
+    margin-top: 10px;
+    border-radius: 19px;
+    background: rgba(50, 57, 74, 0.45);
+}
+
+.features  {
+    /* justify-content: center; */
+    align-items: center;
+    align-content: center;
+    text-align: center  ;
+
+}
+
+.features ul {
+    padding-left: 20px;
+}
+
+.features ul li{
+    list-style: none;
+    width: 90%;   
+    height: 30px;
+    padding-top: 5px;
+    /* color: white; */
+    font-size: 18px;
+    margin-top: 8px;
+
+    background-color: #fff;
+    text-align: center;
+    font-family: Inter;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    border-radius: 25px;
+}
+
+.features ul li input[type="radio"] {
+    /* display: none; */
+}
 
 /* -----------------------ContentBar----------------------- */
 
