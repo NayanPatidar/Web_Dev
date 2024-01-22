@@ -22,7 +22,6 @@ app.get('/login', (req, res) => {
 
 app.get('/callback', async (req, res) => {
     const code = req.query.code || null;
-    const state = req.query.state || null;
 
     try {
         const tokenResponse = await exchangeCodeForToken(code);
@@ -48,14 +47,14 @@ function redirectToAuthCodeFlow(res) {
     querystring.stringify({
       response_type: 'code',
       client_id: clientId,
-      scope: libraryRead,
+      scope: scopesUserDetails,
       redirect_uri: redirectUri
     }));
-  }
+}
   
-  async function exchangeCodeForToken(code) {
+async function exchangeCodeForToken(code) {
     const tokenUrl = 'https://accounts.spotify.com/api/token';
-    const authHeader = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+    const authHeader = Buffer.from(clientId + ':' + clientSecret).toString('base64');
 
     const data = {
         grant_type: 'authorization_code',
