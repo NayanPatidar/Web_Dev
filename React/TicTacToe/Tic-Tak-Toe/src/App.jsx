@@ -1,14 +1,40 @@
 import "./App.css";
 
 function App() {
+  let currentText = "X";
 
-  let currentText = 'X'
+  const initialBoard = Array(9).fill(null);
+  const [board, setBoard] = useState(initialBoard);
 
-  let boxes = document.querySelectorAll(".box");
-  
-  boxes.forEach((box) => {
-    console.log(box);
-  })
+  function FakeText(box) {
+    if (box.innerHTML == "X") {
+      console.log(box.innerHTML);
+    }
+  }
+
+  const renderBox = (index) => {
+    const boxColour = getBoxColour(index);
+    return (
+      <div key={index} className={`box pl-6 pt-3 h-20 w-20 ${boxColour}`}>
+        {board[index]}
+      </div>
+    );
+  };
+
+  const getBoxColour = (index) => {
+    const colours = [
+      "bg-blue-500",
+      "bg-green-400",
+      "bg-red-500",
+      "bg-yellow-500",
+      "bg-pink-500",
+      "bg-purple-500",
+      "bg-orange-500",
+      "bg-indigo-500",
+      "bg-teal-500",
+    ];
+    return colours(index);
+  };
 
   return (
     <>
@@ -18,23 +44,7 @@ function App() {
         </h1>
 
         <div className="fixed grid grid-cols-3 grid-rows-3 bg-white w-max mt-40 self-center text-white text-5xl">
-          {/* Row 1 */}
-
-          <div className="box bg-blue-500  pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-green-400 pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-red-500   pl-6 pt-3 h-20 w-20"></div>
-
-          {/* Row 2 */}
-
-          <div className="box bg-yellow-500 pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-pink-500   pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-purple-500 pl-6 pt-3 h-20 w-20"></div>
-
-          {/* Row 3 */}
-
-          <div className="box bg-orange-500 pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-indigo-500 pl-6 pt-3 h-20 w-20"></div>
-          <div className="box bg-teal-500   pl-6 pt-3 h-20 w-20"></div>
+          initialBoard
         </div>
       </div>
     </>
