@@ -6,19 +6,10 @@ function App() {
   const initialBoard = Array(9).fill(null);
   const [board, setBoard] = useState(initialBoard);
   const [hasWon, setHasWon] = useState(false);
-
-  // function FakeTextOn(index) {
-  //   console.log(`Mouse over box at index ${index}`);
-  // }
-
-  // function FakeTextOut(index) {
-  //   console.log(`Mouse left box at index ${index}`);
-  // }
+  const [winner, setWinner] = useState("");
 
   const clicked = (index) => {
-    console.log(hasWon);
     if (board[index] == null && hasWon == false) {
-      console.log("INside");
       const newBoard = [...board];
       newBoard[index] = currentText;
       setBoard(newBoard);
@@ -41,49 +32,68 @@ function App() {
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[3] == "X" && board[4] == "X" && board[5] == "X") ||
       (board[3] == "O" && board[4] == "O" && board[5] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[6] == "X" && board[7] == "X" && board[8] == "X") ||
       (board[6] == "O" && board[7] == "O" && board[8] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[0] == "X" && board[3] == "X" && board[6] == "X") ||
       (board[0] == "O" && board[3] == "O" && board[6] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[1] == "X" && board[4] == "X" && board[7] == "X") ||
       (board[1] == "O" && board[4] == "O" && board[7] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[2] == "X" && board[5] == "X" && board[8] == "X") ||
       (board[2] == "O" && board[5] == "O" && board[8] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[0] == "X" && board[4] == "X" && board[8] == "X") ||
       (board[0] == "O" && board[4] == "O" && board[8] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
+
     } else if (
       (board[2] == "X" && board[4] == "X" && board[6] == "X") ||
       (board[2] == "O" && board[4] == "O" && board[6] == "O")
     ) {
       console.log(`${currentText} Has Won !`);
       setHasWon(true);
+      printWinner();
     }
+  }
+
+  const printWinner = () => {
+    setWinner(`${currentText} Has Won !`);
   }
 
   const renderBox = (index) => {
@@ -117,7 +127,7 @@ function App() {
 
   return (
     <>
-      <div className="container h-screen w-full flex flex-col">
+      <div className="relative container h-screen w-full flex flex-col">
         <h1 className="fixed text-6xl text-center text-white pt-5 whitespace-nowrap transfrom -translate-x-1/2">
           Tic Tac Toe
         </h1>
@@ -125,11 +135,11 @@ function App() {
         <div className="fixed grid grid-cols-3 grid-rows-3 bg-white w-max mt-40 self-center text-white text-5xl">
           {initialBoard.map((_, index) => renderBox(index))}
         </div>
+
+        <span className="fixed text-white bottom-10 text-3xl transfrom -translate-x-1/2">{winner}</span>
       </div>
     </>
   );
 }
 
 export default App;
-// onMouseOver={() => FakeTextOn(index)}
-// onMouseOut={() => FakeTextOut(index)}
