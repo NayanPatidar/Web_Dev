@@ -2,21 +2,35 @@ import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  let currentText = "X";
-
+  const [currentText, setCurrentText] = useState("X");
   const initialBoard = Array(9).fill(null);
   const [board, setBoard] = useState(initialBoard);
 
-  function FakeText(box) {
-    if (box.innerHTML == "X") {
-      console.log(box.innerHTML);
-    }
-  }
+  // function FakeTextOn(index) {
+  //   console.log(`Mouse over box at index ${index}`);
+  // }
+
+  // function FakeTextOut(index) {
+  //   console.log(`Mouse left box at index ${index}`);
+  // }
+
+  const clicked = (index) => {
+    setCurrentText((prevText) => (prevText === "X" ? "O" : "X"));
+    console.log(currentText);
+    const newBoard = [...board];
+    newBoard[index] = currentText;
+    setBoard(newBoard);
+    console.log(`Mouse clicked box at index ${index}`);
+  };
 
   const renderBox = (index) => {
     const boxColour = getBoxColour(index);
     return (
-      <div key={index} className={`box pl-6 pt-3 h-20 w-20 ${boxColour}`}>
+      <div
+        key={index}
+        className={`box pl-6 pt-3 h-20 w-20 ${boxColour}`}
+        onClick={() => clicked(index)}
+      >
         {board[index]}
       </div>
     );
@@ -54,3 +68,5 @@ function App() {
 }
 
 export default App;
+// onMouseOver={() => FakeTextOn(index)}
+// onMouseOut={() => FakeTextOut(index)}
