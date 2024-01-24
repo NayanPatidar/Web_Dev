@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [currentText, setCurrentText] = useState("X");
   const initialBoard = Array(9).fill(null);
   const [board, setBoard] = useState(initialBoard);
+  const [hasWon, setHasWon] = useState(false);
 
   // function FakeTextOn(index) {
   //   console.log(`Mouse over box at index ${index}`);
@@ -15,19 +16,74 @@ function App() {
   // }
 
   const clicked = (index) => {
-    console.log(board[index]);
-    if (board[index] == null) {
+    console.log(hasWon);
+    if (board[index] == null && hasWon == false) {
+      console.log("INside");
       const newBoard = [...board];
       newBoard[index] = currentText;
       setBoard(newBoard);
-      console.log(`Mouse clicked box at index ${index}`);  
-      changeText();  
     }
   };
 
+  useEffect(() => {
+    checkWinner();
+    changeText();
+  }, [board]);
+
   const changeText = () => {
     setCurrentText((prevText) => (prevText === "X" ? "O" : "X"));
-    console.log(currentText);
+  };
+
+  function checkWinner() {
+    if (
+      (board[0] == "X" && board[1] == "X" && board[2] == "X") ||
+      (board[0] == "O" && board[1] == "O" && board[2] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[3] == "X" && board[4] == "X" && board[5] == "X") ||
+      (board[3] == "O" && board[4] == "O" && board[5] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[6] == "X" && board[7] == "X" && board[8] == "X") ||
+      (board[6] == "O" && board[7] == "O" && board[8] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[0] == "X" && board[3] == "X" && board[6] == "X") ||
+      (board[0] == "O" && board[3] == "O" && board[6] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[1] == "X" && board[4] == "X" && board[7] == "X") ||
+      (board[1] == "O" && board[4] == "O" && board[7] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[2] == "X" && board[5] == "X" && board[8] == "X") ||
+      (board[2] == "O" && board[5] == "O" && board[8] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[0] == "X" && board[4] == "X" && board[8] == "X") ||
+      (board[0] == "O" && board[4] == "O" && board[8] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    } else if (
+      (board[2] == "X" && board[4] == "X" && board[6] == "X") ||
+      (board[2] == "O" && board[4] == "O" && board[6] == "O")
+    ) {
+      console.log(`${currentText} Has Won !`);
+      setHasWon(true);
+    }
   }
 
   const renderBox = (index) => {
