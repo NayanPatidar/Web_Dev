@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import "./App.css";
 
 function App() {
@@ -33,7 +34,8 @@ function App() {
       "bg-indigo-500",
       "bg-teal-500",
     ];
-    return colours(index);
+
+    return colours[index];
   };
 
   return (
@@ -44,7 +46,7 @@ function App() {
         </h1>
 
         <div className="fixed grid grid-cols-3 grid-rows-3 bg-white w-max mt-40 self-center text-white text-5xl">
-          initialBoard
+          {initialBoard.map((_, index) => renderBox(index))}
         </div>
       </div>
     </>
