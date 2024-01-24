@@ -15,13 +15,20 @@ function App() {
   // }
 
   const clicked = (index) => {
+    console.log(board[index]);
+    if (board[index] == null) {
+      const newBoard = [...board];
+      newBoard[index] = currentText;
+      setBoard(newBoard);
+      console.log(`Mouse clicked box at index ${index}`);  
+      changeText();  
+    }
+  };
+
+  const changeText = () => {
     setCurrentText((prevText) => (prevText === "X" ? "O" : "X"));
     console.log(currentText);
-    const newBoard = [...board];
-    newBoard[index] = currentText;
-    setBoard(newBoard);
-    console.log(`Mouse clicked box at index ${index}`);
-  };
+  }
 
   const renderBox = (index) => {
     const boxColour = getBoxColour(index);
