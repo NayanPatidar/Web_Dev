@@ -31,27 +31,38 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormError(validateInput(formData));  
-
+    setFormError(validateInput(formData));
   };
 
   const validateInput = (values) => {
-    const errors = {}
+    const errors = {};
 
     if (!values.username) {
-      errors.username = "Username is required !"
+      errors.username = "Username is required !";
+    } else if (!/^[a-zA-Z0-9_]+$/.test(values.username)) {
+      errors.username = "Invalid username. Use only letters, numbers, and underscores";
     }
 
     if (!values.email) {
-      errors.email = "Email is required !"
+      errors.email = "Email is required !";
+    } else if (
+      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(values.email)
+    ) {
+      errors.email = "Invalid email address";
     }
 
     if (!values.password) {
-      errors.password = "Password is required !"
+      errors.password = "Password is required !";
+    } else if (
+      !/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(values.password)
+    ) {
+      errors.password = "8 characters, at least one number and one special character";
     }
 
     if (!values.confirmPassword) {
-      errors.confirmPassword = "Confirm the password !"
+      errors.confirmPassword = "Password is required !";
+    } else if (values.confirmPassword != values.password) {
+      errors.confirmPassword = "Passwords don't match !"
     }
 
     return errors;
@@ -113,7 +124,7 @@ function App() {
                   value={formData.confirmPassword}
                   required
                 />
-                <p className="text-red-900 ">{formError.confirmPassword}</p>
+                <p className="text-red-600 ">{formError.confirmPassword}</p>
               </div>
               <button
                 type="submit"
