@@ -4,3 +4,8 @@ body {
   min-width:fit-content;
   min-height: fit-content;
 }
+
+input {
+  border: none;
+  outline: none;
+}
