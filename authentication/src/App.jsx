@@ -17,21 +17,27 @@ function App() {
     confirmPassword: "",
   });
 
+  const [isSubmit, setSubmit] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    console.log(formError[name]);
     formError[name] = "";
   };
 
-  // const checkConfirmPassword = () => {};
+  useEffect(() => {
+    if (Object.keys(formError).length === 0 && isSubmit) {
+      console.log("Signed Up!!");
+    }
+  }, [formError]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormError(validateInput(formData));
+    setSubmit(true);
   };
 
   const validateInput = (values) => {
@@ -40,7 +46,8 @@ function App() {
     if (!values.username) {
       errors.username = "Username is required !";
     } else if (!/^[a-zA-Z0-9_]+$/.test(values.username)) {
-      errors.username = "Invalid username. Use only letters, numbers, and underscores";
+      errors.username =
+        "Invalid username. Use only letters, numbers, and underscores";
     }
 
     if (!values.email) {
@@ -56,13 +63,14 @@ function App() {
     } else if (
       !/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(values.password)
     ) {
-      errors.password = "8 characters, at least one number and one special character";
+      errors.password =
+        "8 characters, at least one number and one special character";
     }
 
     if (!values.confirmPassword) {
       errors.confirmPassword = "Password is required !";
     } else if (values.confirmPassword != values.password) {
-      errors.confirmPassword = "Passwords don't match !"
+      errors.confirmPassword = "Passwords don't match !";
     }
 
     return errors;
