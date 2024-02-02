@@ -139,8 +139,8 @@ const Signup = () => {
                 Sign Up
               </button>
               <p className="text-center self-center text-white">
-                Already have an account?{" "}
-                <a href="your_login_page_url" className=" hover:underline">Log in here.</a>
+                Already have an account? 
+                <a href="/sign-in" className=" hover:underline"> Log in here.</a>
               </p>
             </form>
           </div>

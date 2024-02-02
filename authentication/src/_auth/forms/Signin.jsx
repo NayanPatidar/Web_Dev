@@ -13,7 +13,7 @@ const Signin = () => {
 
   const [isSubmit, setSubmit] = useState(false);
 
-  const handleInputChange = () => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     formError[name] = "";
@@ -48,9 +48,11 @@ const Signin = () => {
     return errors;
   };
 
-  useEffect( () => {
-    
-  })
+  useEffect(() => {
+    if (Object.keys(formError).length === 0 && isSubmit) {
+      console.log("Signed In");
+    }
+  }, [formError]);
 
   return (
     <>
@@ -94,7 +96,7 @@ const Signin = () => {
               </button>
               <p className="text-center self-center text-white">
                 Don't have an account?{" "}
-                <a href="your_login_page_url" className=" hover:underline">
+                <a href="/sign-up" className=" hover:underline">
                   Signup here.
                 </a>
               </p>
