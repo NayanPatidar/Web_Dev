@@ -1,11 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Signin = () => {
-    const [formError, setFormError] = useState({
-        email: "",
-        password: "",
-    })
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
+  const [formError, setFormError] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [isSubmit, setSubmit] = useState(false);
+
+  const handleInputChange = () => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    formError[name] = "";
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setFormError(validateInput(formData));
+    setSubmit(true);
+  };
+
+  const validateInput = (values) => {
+    const errors = {};
+
+    if (!values.email) {
+      errors.email = "Email is required !";
+    } else if (
+      !/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(values.email)
+    ) {
+      errors.email = "Invalid email address";
+    }
+
+    if (!values.password) {
+      errors.password = "Password is required !";
+    } else if (
+      !/^(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(values.password)
+    ) {
+      errors.password =
+        "8 characters, at least one number and one special character";
+    }
+
+    return errors;
+  };
+
+  useEffect( () => {
+    
+  })
 
   return (
     <>
@@ -16,15 +61,15 @@ const Signin = () => {
           </h1>
 
           <div className=" w-11/12 h-max m-3 text-black text-sm p-2">
-            <form noValidate>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="flex flex-col pb-2">
                 <label className=" text-white pb-1">Email</label>
                 <input
                   type="email"
                   name="email"
                   className="rounded h-8 pl-1"
-                //   onChange={handleInputChange}
-                //   value={formData.email}
+                  onChange={handleInputChange}
+                  value={formData.email}
                   required
                 />
                 <p className="text-red-600">{formError.email}</p>
@@ -35,8 +80,8 @@ const Signin = () => {
                   type="password"
                   name="password"
                   className="rounded h-8 pl-1"
-                //   onChange={handleInputChange}
-                //   value={formData.password}
+                  onChange={handleInputChange}
+                  value={formData.password}
                   required
                 />
                 <p className="text-red-600">{formError.password}</p>
@@ -48,9 +93,9 @@ const Signin = () => {
                 Sign In
               </button>
               <p className="text-center self-center text-white">
-                Already have an account?{" "}
+                Don't have an account?{" "}
                 <a href="your_login_page_url" className=" hover:underline">
-                  Log in here.
+                  Signup here.
                 </a>
               </p>
             </form>
