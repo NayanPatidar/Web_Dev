@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Singup() {
+const Signup = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -134,20 +134,20 @@ function Singup() {
               </div>
               <button
                 type="submit"
-                className=" w-full bg-black text-white px-4 py-2 rounded-md mt-8 hover:underline "
+                className=" w-full bg-black text-white px-4 py-2 rounded-md mt-5 hover:underline "
               >
                 Sign Up
               </button>
+              <p className="text-center self-center text-white">
+                Already have an account?{" "}
+                <a href="your_login_page_url" className=" hover:underline">Log in here.</a>
+              </p>
             </form>
           </div>
         </div>
       </div>
-      <img
-        src="/assets/images/background.jpg"
-        className="w-full h-screen object-cover brightness-75"
-      />
     </>
   );
 }
 
-export default Singup;
+export default Signup;
