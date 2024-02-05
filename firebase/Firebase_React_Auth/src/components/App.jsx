@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import Signup from "./Signup";
 import Dashboard from "./Dashboard";
@@ -20,7 +19,6 @@ function App() {
               <Route exact path="/" Component={Dashboard}/>
               <Route path="/signup" Component={Signup} />
               <Route path="/login" Component={Login} />
-
             </Routes>
           </AuthProvider>
         </Router>
