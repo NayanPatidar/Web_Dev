@@ -7,6 +7,7 @@ export default function ForgotPassword() {
   const emailRef = useRef();
   const { resetPassword } = useAuth();
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export default function ForgotPassword() {
       setError("");
       setLoading(true);
       await resetPassword(emailRef.current.value);
-      
+      setMessage("Check your inbox for further instructions")
     } catch (error) {
       setError(`Failed to reset password`);
       console.error(` ${error.message}`);
@@ -31,6 +32,8 @@ export default function ForgotPassword() {
         <Card.Body>
           <h2 className="text-center mb-4">Forgot Password</h2>
           {error && <Alert variant="danger">{error}</Alert>}
+          {message && <Alert variant="success">{message}</Alert>}
+
           <Form onSubmit={handleSubmit}>
             <Form.Group id="email">
               <Form.Label>Email</Form.Label>

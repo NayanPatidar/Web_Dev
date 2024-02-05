@@ -46,8 +46,16 @@ export function AuthProvider({ children }) {
     return await signOut(auth);
   }
 
-  async function resetPassword(email){
-    return await sendPasswordResetEmail(auth, email)
+  async function resetPassword(email) {
+    return await sendPasswordResetEmail(auth, email);
+  }
+
+  async function updateEmail(email) {
+    return updateEmail(auth, email);
+  }
+
+  async function updatePassword(password) {
+    return updatePassword(auth, password);
   }
 
   useEffect(() => {
@@ -64,6 +72,8 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
+    updateEmail,
+    updatePassword,
   };
 
   return (
