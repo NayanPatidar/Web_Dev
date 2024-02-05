@@ -5,6 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import "../firebase";
 const auth = getAuth();
@@ -50,12 +52,12 @@ export function AuthProvider({ children }) {
     return await sendPasswordResetEmail(auth, email);
   }
 
-  async function updateEmail(email) {
-    return updateEmail(auth, email);
+  async function updateemail(email) {
+    return await updateEmail(auth, email);
   }
 
-  async function updatePassword(password) {
-    return updatePassword(auth, password);
+  async function updatepassword(password) {
+    return await updatePassword(auth, password);
   }
 
   useEffect(() => {
@@ -72,8 +74,8 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
-    updateEmail,
-    updatePassword,
+    updateemail,
+    updatepassword,
   };
 
   return (
