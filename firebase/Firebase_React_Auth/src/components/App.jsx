@@ -5,6 +5,7 @@ import Login from "./Login";
 import { Container } from "react-bootstrap";
 import { AuthProvider } from "../context/AuthContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 
 function App() {
   return (
@@ -16,7 +17,22 @@ function App() {
         <Router>
           <AuthProvider>
             <Routes>
-              <Route exact path="/" Component={Dashboard}/>
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                }
+              />
+              {/* <Route
+                path="/update-profile"
+                element={
+                  <PrivateRoute>
+                    <UpdateProfile />
+                  </PrivateRoute>
+                }
+              />{" "} */}
               <Route path="/signup" Component={Signup} />
               <Route path="/login" Component={Login} />
             </Routes>
