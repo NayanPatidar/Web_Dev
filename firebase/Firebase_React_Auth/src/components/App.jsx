@@ -6,6 +6,7 @@ import { Container } from "react-bootstrap";
 import { AuthProvider } from "../context/AuthContext";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
+import ForgotPassword from "./ForgotPassword";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               />{" "} */}
               <Route path="/signup" Component={Signup} />
               <Route path="/login" Component={Login} />
+              <Route path="/forgot-password" Component={ForgotPassword} />
             </Routes>
           </AuthProvider>
         </Router>
