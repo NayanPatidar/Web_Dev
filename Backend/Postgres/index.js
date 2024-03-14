@@ -20,7 +20,10 @@ client.connect()
     console.log(error);
   })
 
-client.query('SELECT * FROM customer')
+client.query(`SELECT u.name , w.product
+              FROM users u JOIN wishlist w 
+              ON u.user_id = w.user_id 
+              `)
   .then((result) => {
     console.log(result.rows);
   })
