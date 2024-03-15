@@ -14,12 +14,15 @@ function jwtVerify(token) {
     const tokenExpiration = expirationTime - currentTime;
 
     if (tokenExpiration <= 0) {
-      throw new Error("Token Has Been Expired !!! ");
+      console.error("Token Has Been Expired !!! ");
+      return false;
     } else {
       console.log("Token is still valid !!");
+      return true;
     }
   } catch (error) {
     console.error("Invalid Token: ", error.message);
+    return false;
   }
 }
 

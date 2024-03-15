@@ -31,8 +31,11 @@ app.get("/users/mainpage/", async (req, res) => {
 
     if (authHeader && authHeader.trim() !== "") {
       const token = extractToken(authHeader);
-      jwtVerify(token);
-      res.send("Token has been verified ! Now you  can contunue shopping");
+      if (jwtVerify(token)) {
+        res.send("Token has been verified ! Now you  can contunue shopping");
+      } else {
+        res.status(400).json({ error: "Unauthorized - Invalid Token" });
+      }
     }
   } catch (error) {
     res.status(401).json({ error: "Unauthorized - Invalid Token" });
