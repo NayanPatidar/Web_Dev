@@ -15,10 +15,15 @@ async function CheckUser(username, email) {
 
 async function FetchUser(user_id) {
   const pg_query = `SELECT ROW_TO_JSON(row) AS user_info 
-                    FROM ( SELECT name, email FROM users 
+                    FROM ( SELECT user_id, name, email FROM users 
                     WHERE user_id = ($1) ) row`;
-  const result = await client.query(pg_query, [user_id]);
-  return result;                    
+  try {
+    const result = await client.query(pg_query, [user_id]);
+    return result.rows[0].user_info;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
 }
 
-module.exports = { AddUser, CheckUser };
+module.exports = { AddUser, CheckUser, FetchUser };
