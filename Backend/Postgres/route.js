@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const { AddUser, CheckUser, FetchUser } = require("./services");
 const { generateJWT } = require("./jwtGeneration");
+const { jwtVerify } = require("./jwtVerification");
 
 const PORT = 8080;
 app.use(bodyParser.json());
@@ -26,10 +27,24 @@ app.get("/user/signin", async (req, res) => {
 
 app.get("/users/mainpage/", async (req, res) => {
   try {
-    const decodedToken = await 
+    const authHeader = req.headers["authorization"];
+
+    if (authHeader && authHeader.trim() !== "") {
+      const token = extractToken(authHeader);
+      jwtVerify(token);
+      res.send("Token has been verified ! Now you  can contunue shopping");
+    }
   } catch (error) {
     res.status(401).json({ error: "Unauthorized - Invalid Token" });
   }
 });
+
+function extractToken(authorizedHeader) {
+  if (authorizedHeader.startsWith("Bearer ")) {
+    return authorizedHeader.substring(7);
+  } else {
+    return null;
+  }
+}
 
 app.listen(PORT, () => console.log(`Server is running on the port ${PORT}`));
