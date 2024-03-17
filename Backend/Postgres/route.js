@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const { AddUser, CheckUser, FetchUser } = require("./services");
+const { AddUser, CheckUser, FetchUser, FetchImages } = require("./services");
 const { generateJWT } = require("./jwtGeneration");
 const { jwtVerify } = require("./jwtVerification");
 
@@ -10,7 +10,6 @@ app.use(bodyParser.json());
 
 app.get("/user/signin", async (req, res) => {
   const { name, password, email } = req.body;
-
   const userId = await CheckUser(name, email);
 
   if (userId == undefined || userId == 0) {
@@ -39,6 +38,16 @@ app.get("/users/mainpage/", async (req, res) => {
     }
   } catch (error) {
     res.status(401).json({ error: "Unauthorized - Invalid Token" });
+  }
+});
+
+app.get("/mainpage/images", async (req, res) => {
+  try {
+    const images = await FetchImages();
+    console.log(images);
+    res.json({ images });
+  } catch (error) {
+    res.send(401).json({ error: "Images Not Found " });
   }
 });
 

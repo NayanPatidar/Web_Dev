@@ -26,4 +26,17 @@ async function FetchUser(user_id) {
   }
 }
 
-module.exports = { AddUser, CheckUser, FetchUser };
+async function FetchImages() {
+  const pg_query = `SELECT ROW_TO_JSON(row) AS product_info 
+                      FROM (	SELECT photo1
+                      FROM products WHERE product_id IN (1,2) ) row;`;
+  try {
+    const result = await client.query(pg_query);
+    return result.rows.map(row => row.product_info);
+  } catch (error) {
+    console.error("Erro fetching the images", error.message);
+    throw error;
+  }
+}
+
+module.exports = { AddUser, CheckUser, FetchUser, FetchImages };
