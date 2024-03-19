@@ -32,7 +32,7 @@ async function FetchImages() {
                       FROM products WHERE product_id IN (1,2) ) row;`;
   try {
     const result = await client.query(pg_query);
-    return result.rows.map(row => row.product_info);
+    return result.rows.map((row) => row.product_info);
   } catch (error) {
     console.error("Erro fetching the images", error.message);
     throw error;

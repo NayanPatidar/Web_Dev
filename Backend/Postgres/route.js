@@ -8,6 +8,11 @@ const { jwtVerify } = require("./jwtVerification");
 const PORT = 8080;
 app.use(bodyParser.json());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.get("/user/signin", async (req, res) => {
   const { name, password, email } = req.body;
   const userId = await CheckUser(name, email);
