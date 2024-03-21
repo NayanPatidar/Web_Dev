@@ -39,4 +39,17 @@ async function FetchImages() {
   }
 }
 
-module.exports = { AddUser, CheckUser, FetchUser, FetchImages };
+async function FetchTShirts(){
+  const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
+                    FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1 
+                    FROM tshirts WHERE product_id IN (12,9,1,15)) ROW;`
+  try {
+    const result = await client.query(pg_query);
+    return result.rows.map((row) => row);
+  } catch (error){
+    console.error("Error Fetching the Tshirt details", error.message);
+    throw error;
+  }
+}
+
+module.exports = { AddUser, CheckUser, FetchUser, FetchImages, FetchTShirts };

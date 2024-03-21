@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const { AddUser, CheckUser, FetchUser, FetchImages } = require("./services");
+const { AddUser, CheckUser, FetchUser, FetchImages, FetchTShirts } = require("./services");
 const { generateJWT } = require("./jwtGeneration");
 const { jwtVerify } = require("./jwtVerification");
 
@@ -53,6 +53,16 @@ app.get("/mainpage/images", async (req, res) => {
     res.json({ images });
   } catch (error) {
     res.send(401).json({ error: "Images Not Found " });
+  }
+});
+
+app.get("/mainpage/TShirts", async (req, res) => {
+  try {
+    const tshirtsDetails = await FetchTShirts();
+    console.log(tshirtsDetails);
+    res.json({ tshirtsDetails });
+  } catch (error) {
+    res.send(401).json({ error: "Thirts Not Found " });
   }
 });
 
