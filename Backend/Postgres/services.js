@@ -27,12 +27,12 @@ async function FetchUser(user_id) {
 }
 
 async function FetchImages() {
-  const pg_query = `SELECT ROW_TO_JSON(row) AS product_info 
+  const pg_query = `SELECT ROW_TO_JSON(row) AS photos 
                       FROM (	SELECT photo1
-                      FROM products WHERE product_id IN (1,2) ) row;`;
+                      FROM tshirts WHERE product_id IN (16,22,26) ) row;`;
   try {
     const result = await client.query(pg_query);
-    return result.rows.map((row) => row.product_info);
+    return result.rows.map((row) => row.photos);
   } catch (error) {
     console.error("Erro fetching the images", error.message);
     throw error;
