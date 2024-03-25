@@ -1,7 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const { AddUser, CheckUser, FetchUser, FetchImages, FetchTShirts } = require("./services");
+
+const {
+  AddUser,
+  CheckUser,
+  FetchUser,
+  FetchImages,
+  FetchHomePageTShirts,
+  FetchAllCloths,
+  FetchFilteredCloths,
+} = require("./services");
+
 const { generateJWT } = require("./jwtGeneration");
 const { jwtVerify } = require("./jwtVerification");
 
@@ -9,7 +19,7 @@ const PORT = 8080;
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Origin", "*");
   next();
 });
 
@@ -58,11 +68,31 @@ app.get("/mainpage/images", async (req, res) => {
 
 app.get("/mainpage/TShirts", async (req, res) => {
   try {
-    const tshirtsDetails = await FetchTShirts();
+    const tshirtsDetails = await FetchHomePageTShirts();
     console.log(tshirtsDetails);
     res.json({ tshirtsDetails });
   } catch (error) {
-    res.send(401).json({ error: "Thirts Not Found " });
+    res.send(401).json({ error: "Tshirts Not Found " });
+  }
+});
+
+app.get("/products/men", async (req, res) => {
+  try {
+    const filters = req.body;
+    let category;
+
+    if (!filters || Object.keys(filters).length === 0) {
+      const clothsData = await FetchAllCloths();
+      return res.json({ clothsData });
+    } else {
+      category = filters.category;
+    }
+
+    const clothsData = await FetchFilteredCloths(category);
+    res.json({ clothsData });
+  } catch (error) {
+    console.log(error.message);
+    res.send(401).json({ error: " Cloths Data Not Found" });
   }
 });
 
