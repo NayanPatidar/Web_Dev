@@ -39,17 +39,59 @@ async function FetchImages() {
   }
 }
 
-async function FetchTShirts(){
+async function FetchHomePageTShirts() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
                     FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1 
-                    FROM tshirts WHERE product_id IN (12,9,1,15)) ROW;`
+                    FROM tshirts WHERE product_id IN (12,9,1,15)) ROW;`;
   try {
     const result = await client.query(pg_query);
     return result.rows.map((row) => row);
-  } catch (error){
+  } catch (error) {
     console.error("Error Fetching the Tshirt details", error.message);
     throw error;
   }
 }
 
-module.exports = { AddUser, CheckUser, FetchUser, FetchImages, FetchTShirts };
+async function FetchAllCloths() {
+  const pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
+	                  FROM (SELECT * FROM tshirts ) ROW;`;
+
+  try {
+    const result = await client.query(pg_query);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching All Cloths");
+    throw error;
+  }
+}
+
+async function FetchFilteredCloths(categories) {
+  let pg_query;
+  let values = [];
+  if (categories && categories.length > 0) {
+    const placeholders = categories
+      .map((category, index) => `$${index + 1}`)
+      .join(",");
+    pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
+                  FROM (SELECT * FROM tshirts WHERE category IN (${placeholders})) row;`;
+    values = categories;
+  }
+
+  try {
+    const result = await client.query(pg_query, values);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching Cloths:", error);
+    throw error;
+  }
+}
+
+module.exports = {
+  AddUser,
+  CheckUser,
+  FetchUser,
+  FetchImages,
+  FetchHomePageTShirts,
+  FetchAllCloths,
+  FetchFilteredCloths,
+};
