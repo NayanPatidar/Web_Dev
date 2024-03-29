@@ -42,7 +42,7 @@ async function FetchImages() {
 async function FetchHomePageTShirts() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
                     FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1 
-                    FROM tshirts WHERE product_id IN (12,9,1,15)) ROW;`;
+                    FROM tshirts WHERE product_id IN (28,29,14,15)) ROW;`;
   try {
     const result = await client.query(pg_query);
     return result.rows.map((row) => row);
@@ -65,17 +65,32 @@ async function FetchAllCloths() {
   }
 }
 
-async function FetchFilteredCloths(categories) {
+async function FetchFilteredCloths(categories, sortType) {
   let pg_query;
   let values = [];
-  if (categories && categories.length > 0) {
+
+  // console.log(`${categories}-Filter ${sortType}-Sort `);
+  pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
+                FROM (SELECT * FROM tshirts `;
+
+  if (categories) {
     const placeholders = categories
       .map((category, index) => `$${index + 1}`)
       .join(",");
-    pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-                  FROM (SELECT * FROM tshirts WHERE category IN (${placeholders})) row;`;
-    values = categories;
+    let categoryQuery = `WHERE category IN (${placeholders}) `;
+    pg_query += categoryQuery;
+    // console.log(`Category is present ${categories}-`);
   }
+
+  if (sortType) {
+    let sortQuery = `ORDER BY price ${sortType}`;
+    pg_query += sortQuery;
+  }
+  pg_query += `) row;`;
+
+  values = categories;
+
+  console.log(pg_query);
 
   try {
     const result = await client.query(pg_query, values);
