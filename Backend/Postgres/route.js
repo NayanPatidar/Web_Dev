@@ -78,21 +78,38 @@ app.get("/mainpage/TShirts", async (req, res) => {
 
 app.get("/products/men", async (req, res) => {
   try {
-    const filters = req.body;
-    let category;
+    const filters = req.query.category;
+    const sorting = req.query.sort;
+    let category, sortType;
+    console.log(`${filters} - ${sorting} `);
 
-    if (!filters || Object.keys(filters).length === 0) {
-      const clothsData = await FetchAllCloths();
-      return res.json({ clothsData });
+    if (!Array.isArray(filters) && filters != undefined) {
+      category = [filters];
+    } else if (!Array.isArray(filters)) {
+      category = "";
     } else {
-      category = filters.category;
+      category = filters;
     }
 
-    const clothsData = await FetchFilteredCloths(category);
+    if (sorting == undefined) {
+      sortType = "";
+    } else {
+      sortType = sorting;
+    }
+
+    if (
+      (!filters || Object.keys(filters).length === 0) &&
+      (!sorting || Object.keys(sorting).length === 0)
+    ) {
+      console.log("This is the Fetch All Cloths");
+      const clothsData = await FetchAllCloths();
+      return res.json({ clothsData });
+    }
+    const clothsData = await FetchFilteredCloths(category, sorting);
     res.json({ clothsData });
   } catch (error) {
     console.log(error.message);
-    res.send(401).json({ error: " Cloths Data Not Found" });
+    res.send(500).json({ error: " Cloths Data Not Found" });
   }
 });
 
