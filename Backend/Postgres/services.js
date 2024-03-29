@@ -65,7 +65,7 @@ async function FetchAllCloths() {
   }
 }
 
-async function FetchFilteredCloths(categories, sortType) {
+async function FetchFilteredCloths(categories, sortType, discount) {
   let pg_query;
   let values = [];
 
@@ -80,6 +80,18 @@ async function FetchFilteredCloths(categories, sortType) {
     let categoryQuery = `WHERE category IN (${placeholders}) `;
     pg_query += categoryQuery;
     // console.log(`Category is present ${categories}-`);
+  }
+
+  if (discount) {
+    let discountQuery = "";
+    if (categories) {
+      discountQuery += `AND`;
+    } else {
+      discountQuery += `WHERE`;
+    }
+    discountQuery += ` discount > ${discount} `;
+    console.log(discountQuery + "- Discount Query");
+    pg_query += discountQuery;
   }
 
   if (sortType) {

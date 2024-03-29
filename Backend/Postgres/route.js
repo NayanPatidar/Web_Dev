@@ -78,17 +78,18 @@ app.get("/mainpage/TShirts", async (req, res) => {
 
 app.get("/products/men", async (req, res) => {
   try {
-    const filters = req.query.category;
+    const categoryFilter = req.query.category;
     const sorting = req.query.sort;
-    let category, sortType;
-    console.log(`${filters} - ${sorting} `);
+    const discountFilter = req.query.discount;
+    let category, sortType, discount;
+    console.log(`${categoryFilter} - ${sorting} - ${discountFilter} `);
 
-    if (!Array.isArray(filters) && filters != undefined) {
-      category = [filters];
-    } else if (!Array.isArray(filters)) {
+    if (!Array.isArray(categoryFilter) && categoryFilter != undefined) {
+      category = [categoryFilter];
+    } else if (!Array.isArray(categoryFilter)) {
       category = "";
     } else {
-      category = filters;
+      category = categoryFilter;
     }
 
     if (sorting == undefined) {
@@ -97,15 +98,22 @@ app.get("/products/men", async (req, res) => {
       sortType = sorting;
     }
 
+    if (discountFilter == undefined) {
+      discount = "";
+    } else {
+      discount = discountFilter;
+    }
+
     if (
-      (!filters || Object.keys(filters).length === 0) &&
-      (!sorting || Object.keys(sorting).length === 0)
+      (!categoryFilter || Object.keys(categoryFilter).length === 0) &&
+      (!sorting || Object.keys(sorting).length === 0) &&
+      (!discountFilter || Object.keys(discountFilter).length === 0)
     ) {
       console.log("This is the Fetch All Cloths");
       const clothsData = await FetchAllCloths();
       return res.json({ clothsData });
     }
-    const clothsData = await FetchFilteredCloths(category, sorting);
+    const clothsData = await FetchFilteredCloths(category, sorting, discount);
     res.json({ clothsData });
   } catch (error) {
     console.log(error.message);
