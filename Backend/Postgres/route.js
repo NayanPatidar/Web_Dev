@@ -10,6 +10,7 @@ const {
   FetchHomePageTShirts,
   FetchAllCloths,
   FetchFilteredCloths,
+  FetchOneProduct,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -82,7 +83,7 @@ app.get("/products/men", async (req, res) => {
     const sorting = req.query.sort;
     const discountFilter = req.query.discount;
     let category, sortType, discount;
-    console.log(`${categoryFilter} - ${sorting} - ${discountFilter} `);
+    // console.log(`${categoryFilter} - ${sorting} - ${discountFilter} `);
 
     if (!Array.isArray(categoryFilter) && categoryFilter != undefined) {
       category = [categoryFilter];
@@ -117,7 +118,21 @@ app.get("/products/men", async (req, res) => {
     res.json({ clothsData });
   } catch (error) {
     console.log(error.message);
-    res.send(500).json({ error: " Cloths Data Not Found" });
+    res.status(200).json({ error: " Cloths Data Not Found" });
+  }
+});
+
+app.get("/product/:productId", async (req, res) => {
+  const params = req.params.productId;
+
+  try {
+    console.log("Here");
+    const productData = await FetchOneProduct(params);
+    console.log(`${JSON.stringify(productData)} `);
+    res.json({ productData });
+
+  } catch (error) {
+    console.error(`Facing Error While Fetching Data From the DB ${error.message}`);
   }
 });
 

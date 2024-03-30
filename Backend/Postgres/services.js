@@ -102,10 +102,31 @@ async function FetchFilteredCloths(categories, sortType, discount) {
 
   values = categories;
 
-  console.log(pg_query);
+  // console.log(pg_query);
 
   try {
     const result = await client.query(pg_query, values);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching Cloths:", error);
+    throw error;
+  }
+}
+
+async function FetchOneProduct(product_id) {
+  const pg_query = `SELECT ROW_TO_JSON(row) AS product
+  FROM (
+    SELECT *
+    FROM (
+        SELECT *
+        FROM tshirts
+        JOIN products ON tshirts.product_id = products.product_id
+      WHERE products.product_id = ${product_id}
+      ) AS joined_tables
+  ) AS row;`;
+
+  try {
+    const result = await client.query(pg_query);
     return result.rows.map((row) => row);
   } catch (error) {
     console.error("Error Fetching Cloths:", error);
@@ -121,4 +142,5 @@ module.exports = {
   FetchHomePageTShirts,
   FetchAllCloths,
   FetchFilteredCloths,
+  FetchOneProduct,
 };
