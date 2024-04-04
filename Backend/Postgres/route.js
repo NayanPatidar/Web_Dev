@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const app = express();
 
 const {
@@ -12,6 +13,7 @@ const {
   FetchFilteredCloths,
   FetchOneProduct,
   CartProductsFetching,
+  FetchUnknownUserCartProducts,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -24,6 +26,13 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();
 });
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow requests from this origin
+    allowedHeaders: ["Content-Type"], // Allow 'Content-Type' header
+  })
+);
 
 app.get("/user/signin", async (req, res) => {
   const { name, password, email } = req.body;
@@ -84,7 +93,6 @@ app.get("/products/men", async (req, res) => {
     const sorting = req.query.sort;
     const discountFilter = req.query.discount;
     let category, sortType, discount;
-    // console.log(`${categoryFilter} - ${sorting} - ${discountFilter} `);
 
     if (!Array.isArray(categoryFilter) && categoryFilter != undefined) {
       category = [categoryFilter];
@@ -128,7 +136,7 @@ app.get("/product/:productId", async (req, res) => {
 
   try {
     const productData = await FetchOneProduct(params);
-    console.log(`${JSON.stringify(productData)} `);
+    // console.log(`${JSON.stringify(productData)} `);
     res.json({ productData });
   } catch (error) {
     console.error(
@@ -142,6 +150,16 @@ app.get("/cart", async (req, res) => {
     const productsCart = await CartProductsFetching();
     res.json({ productsCart });
   } catch (error) {}
+});
+
+app.post("/cart/tempUser", async (req, res) => {
+  try {
+    let bodyData = req.body.productIds;
+    const CartData = await FetchUnknownUserCartProducts(bodyData);
+    res.json({ CartData });
+  } catch (error) {
+    console.log(`Error Fetching the Data : `, error.message);
+  }
 });
 
 function extractToken(authorizedHeader) {
