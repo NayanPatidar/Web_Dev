@@ -11,6 +11,7 @@ const {
   FetchAllCloths,
   FetchFilteredCloths,
   FetchOneProduct,
+  CartProductsFetching,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -110,7 +111,7 @@ app.get("/products/men", async (req, res) => {
       (!sorting || Object.keys(sorting).length === 0) &&
       (!discountFilter || Object.keys(discountFilter).length === 0)
     ) {
-      console.log("This is the Fetch All Cloths");
+      // console.log("This is the Fetch All Cloths");
       const clothsData = await FetchAllCloths();
       return res.json({ clothsData });
     }
@@ -126,14 +127,21 @@ app.get("/product/:productId", async (req, res) => {
   const params = req.params.productId;
 
   try {
-    console.log("Here");
     const productData = await FetchOneProduct(params);
     console.log(`${JSON.stringify(productData)} `);
     res.json({ productData });
-
   } catch (error) {
-    console.error(`Facing Error While Fetching Data From the DB ${error.message}`);
+    console.error(
+      `Facing Error While Fetching Data From the DB ${error.message}`
+    );
   }
+});
+
+app.get("/cart", async (req, res) => {
+  try {
+    const productsCart = await CartProductsFetching();
+    res.json({ productsCart });
+  } catch (error) {}
 });
 
 function extractToken(authorizedHeader) {

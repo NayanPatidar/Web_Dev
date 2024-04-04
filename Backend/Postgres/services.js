@@ -41,7 +41,7 @@ async function FetchImages() {
 
 async function FetchHomePageTShirts() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
-                    FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1 
+                    FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1, product_id
                     FROM tshirts WHERE product_id IN (28,29,14,15)) ROW;`;
   try {
     const result = await client.query(pg_query);
@@ -102,8 +102,6 @@ async function FetchFilteredCloths(categories, sortType, discount) {
 
   values = categories;
 
-  // console.log(pg_query);
-
   try {
     const result = await client.query(pg_query, values);
     return result.rows.map((row) => row);
@@ -134,6 +132,22 @@ async function FetchOneProduct(product_id) {
   }
 }
 
+async function CartProductsFetching() {
+  const pg_query = `SELECT ROW_TO_JSON(row) AS cart
+  FROM (
+    SELECT * 
+    FROM tshirts
+    JOIN Cart ON tshirts.product_id = Cart.product_id
+  ) AS row;`;
+
+  try {
+    const CartData = await client.query(pg_query);
+    return CartData.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching the Cart Details");
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -143,4 +157,5 @@ module.exports = {
   FetchAllCloths,
   FetchFilteredCloths,
   FetchOneProduct,
+  CartProductsFetching,
 };
