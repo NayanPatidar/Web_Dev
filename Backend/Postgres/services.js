@@ -69,7 +69,6 @@ async function FetchFilteredCloths(categories, sortType, discount) {
   let pg_query;
   let values = [];
 
-  // console.log(`${categories}-Filter ${sortType}-Sort `);
   pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
                 FROM (SELECT * FROM tshirts `;
 
@@ -79,7 +78,6 @@ async function FetchFilteredCloths(categories, sortType, discount) {
       .join(",");
     let categoryQuery = `WHERE category IN (${placeholders}) `;
     pg_query += categoryQuery;
-    // console.log(`Category is present ${categories}-`);
   }
 
   if (discount) {
@@ -148,6 +146,26 @@ async function CartProductsFetching() {
   }
 }
 
+async function FetchUnknownUserCartProducts(cart_items) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
+                FROM (SELECT * FROM tshirts `;
+
+  if (cart_items) {
+    const placeholders = cart_items
+      .map((category, index) => `$${index + 1}`)
+      .join(",");
+    let categoryQuery = `WHERE product_id IN (${placeholders}) `;
+    pg_query += categoryQuery;
+    pg_query += `) row;`;
+  }
+  try {
+    const productData = await client.query(pg_query, cart_items);
+    return productData.rows.map((products) => products);
+  } catch (error) {
+    console.error(`Error while fetching the cart_items : `, error.message);
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -158,4 +176,5 @@ module.exports = {
   FetchFilteredCloths,
   FetchOneProduct,
   CartProductsFetching,
+  FetchUnknownUserCartProducts,
 };
