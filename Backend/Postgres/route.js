@@ -155,8 +155,12 @@ app.get("/cart", async (req, res) => {
 app.post("/cart/tempUser", async (req, res) => {
   try {
     let bodyData = req.body.productIds;
-    const CartData = await FetchUnknownUserCartProducts(bodyData);
-    res.json({ CartData });
+    if (bodyData && bodyData.length > 0 ) {
+      const CartData = await FetchUnknownUserCartProducts(bodyData);
+      res.json({ CartData });
+      return;
+    }
+    res.json({});
   } catch (error) {
     console.log(`Error Fetching the Data : `, error.message);
   }
