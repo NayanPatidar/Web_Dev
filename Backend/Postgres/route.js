@@ -14,6 +14,7 @@ const {
   FetchOneProduct,
   CartProductsFetching,
   FetchUnknownUserCartProducts,
+  TestingFetchFilteredCloths,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -131,6 +132,54 @@ app.get("/products/men", async (req, res) => {
   }
 });
 
+app.get("/products/men/testing", async (req, res) => {
+  try {
+    const categoryFilter = req.query.category;
+    const sorting = req.query.sort;
+    const discountFilter = req.query.discount;
+    let category, sortType, discount;
+
+    if (!Array.isArray(categoryFilter) && categoryFilter != undefined) {
+      category = [categoryFilter];
+    } else if (!Array.isArray(categoryFilter)) {
+      category = "";
+    } else {
+      category = categoryFilter;
+    }
+
+    if (sorting == undefined) {
+      sortType = "";
+    } else {
+      sortType = sorting;
+    }
+
+    if (discountFilter == undefined) {
+      discount = "";
+    } else {
+      discount = discountFilter;
+    }
+
+    if (
+      (!categoryFilter || Object.keys(categoryFilter).length === 0) &&
+      (!sorting || Object.keys(sorting).length === 0) &&
+      (!discountFilter || Object.keys(discountFilter).length === 0)
+    ) {
+      // console.log("This is the Fetch All Cloths");
+      const clothsData = await FetchAllCloths();
+      return res.json({ clothsData });
+    }
+    const clothsData = await TestingFetchFilteredCloths(
+      category,
+      sorting,
+      discount
+    );
+    res.json({ clothsData });
+  } catch (error) {
+    console.log(error.message);
+    res.status(200).json({ error: " Cloths Data Not Found" });
+  }
+});
+
 app.get("/product/:productId", async (req, res) => {
   const params = req.params.productId;
 
@@ -155,7 +204,7 @@ app.get("/cart", async (req, res) => {
 app.post("/cart/tempUser", async (req, res) => {
   try {
     let bodyData = req.body.productIds;
-    if (bodyData && bodyData.length > 0 ) {
+    if (bodyData && bodyData.length > 0) {
       const CartData = await FetchUnknownUserCartProducts(bodyData);
       res.json({ CartData });
       return;

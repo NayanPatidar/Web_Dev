@@ -29,7 +29,7 @@ async function FetchUser(user_id) {
 async function FetchImages() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS photos 
                       FROM (	SELECT photo1
-                      FROM tshirts WHERE product_id IN (16,22,26) ) row;`;
+                      FROM cloth_basic_info WHERE product_id IN (16,22,26) ) row;`;
   try {
     const result = await client.query(pg_query);
     return result.rows.map((row) => row.photos);
@@ -42,7 +42,7 @@ async function FetchImages() {
 async function FetchHomePageTShirts() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
                     FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1, product_id
-                    FROM tshirts WHERE product_id IN (28,29,14,15)) ROW;`;
+                    FROM cloth_basic_info WHERE product_id IN (28,29,14,15)) ROW;`;
   try {
     const result = await client.query(pg_query);
     return result.rows.map((row) => row);
@@ -54,7 +54,7 @@ async function FetchHomePageTShirts() {
 
 async function FetchAllCloths() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-	                  FROM (SELECT * FROM tshirts ) ROW;`;
+	                  FROM (SELECT * FROM cloth_basic_info ) ROW;`;
 
   try {
     const result = await client.query(pg_query);
@@ -70,7 +70,7 @@ async function FetchFilteredCloths(categories, sortType, discount) {
   let values = [];
 
   pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-                FROM (SELECT * FROM tshirts `;
+                FROM (SELECT * FROM cloth_basic_info `;
 
   if (categories) {
     const placeholders = categories
@@ -109,15 +109,80 @@ async function FetchFilteredCloths(categories, sortType, discount) {
   }
 }
 
+async function TestingFetchFilteredCloths(categories, sortType, discount) {
+  let pg_query;
+  let values = [];
+
+  pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
+                FROM (SELECT     
+                            cb.product_id, 
+                            cb.product_name, 
+                            cb.genericdesc, 
+                            cb.photo1, 
+                            cb.category, 
+                            cb.price, 
+                            cb.discount,
+                            cb.mrp,
+                            array_agg(cs.size_id) 
+                      FROM cloth_basic_info cb
+                      JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
+
+  if (categories) {
+    const placeholders = categories
+      .map((category, index) => `$${index + 1}`)
+      .join(",");
+    let categoryQuery = `WHERE category IN (${placeholders}) `;
+    pg_query += categoryQuery;
+  }
+
+  if (discount) {
+    let discountQuery = "";
+    if (categories) {
+      discountQuery += `AND`;
+    } else {
+      discountQuery += `WHERE`;
+    }
+    discountQuery += ` discount > ${discount} `;
+    console.log(discountQuery + "- Discount Query");
+    pg_query += discountQuery;
+  }
+
+  if (sortType) {
+    let sortQuery = `ORDER BY price ${sortType}`;
+    pg_query += sortQuery;
+  }
+  pg_query += `GROUP BY 
+              cb.product_id, 
+              cb.product_name, 
+              cb.genericdesc, 
+              cb.photo1, 
+              cb.category, 
+              cb.price, 
+              cb.discount,
+              cb.mrp`;
+
+  pg_query += `) row;`;
+
+  values = categories;
+
+  try {
+    const result = await client.query(pg_query, values);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching Cloths:", error);
+    throw error;
+  }
+}
+
 async function FetchOneProduct(product_id) {
   const pg_query = `SELECT ROW_TO_JSON(row) AS product
   FROM (
     SELECT *
     FROM (
         SELECT *
-        FROM tshirts
-        JOIN products ON tshirts.product_id = products.product_id
-      WHERE products.product_id = ${product_id}
+        FROM cloth_basic_info
+        JOIN cloth_detailed_info ON cloth_basic_info.product_id = cloth_detailed_info.product_id
+      WHERE cloth_detailed_info.product_id = ${product_id}
       ) AS joined_tables
   ) AS row;`;
 
@@ -134,8 +199,8 @@ async function CartProductsFetching() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS cart
   FROM (
     SELECT * 
-    FROM tshirts
-    JOIN Cart ON tshirts.product_id = Cart.product_id
+    FROM cloth_basic_info
+    JOIN Cart ON cloth_basic_info.product_id = Cart.product_id
   ) AS row;`;
 
   try {
@@ -148,7 +213,7 @@ async function CartProductsFetching() {
 
 async function FetchUnknownUserCartProducts(cart_items) {
   pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-                FROM (SELECT * FROM tshirts `;
+                FROM (SELECT * FROM cloth_basic_info `;
 
   if (cart_items) {
     const placeholders = cart_items
@@ -177,4 +242,5 @@ module.exports = {
   FetchOneProduct,
   CartProductsFetching,
   FetchUnknownUserCartProducts,
+  TestingFetchFilteredCloths,
 };
