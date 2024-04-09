@@ -65,7 +65,7 @@ async function FetchAllCloths() {
   }
 }
 
-async function FetchFilteredCloths(categories, sortType, discount) {
+async function FetchFilteredCloths(categories, sortType, discount, size) {
   let pg_query;
   let values = [];
 
@@ -84,10 +84,11 @@ async function FetchFilteredCloths(categories, sortType, discount) {
             JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
   if (categories) {
     const placeholders = categories
-      .map((category, index) => `$${index + 1}`)
+      .map((category, index) => `$${index + 1 + values.length}`)
       .join(",");
-    let categoryQuery = `WHERE category IN (${placeholders}) `;
+    let categoryQuery = ` WHERE category IN (${placeholders}) `;
     pg_query += categoryQuery;
+    values = values.concat(categories);
   }
 
   if (discount) {
@@ -110,7 +111,17 @@ async function FetchFilteredCloths(categories, sortType, discount) {
   cb.category, 
   cb.price, 
   cb.discount,
-  cb.mrp`;
+  cb.mrp `;
+
+  if (size) {
+    const placeholders = size
+      .map((category, index) => `$${index + 1 + values.length}`)
+      .join(",");
+    let categoryQuery = `HAVING 
+    ARRAY[${placeholders}]::INT[] <@ array_agg(cs.size_id) `;
+    pg_query += categoryQuery;
+    values = values.concat(size);
+  }
 
   if (sortType) {
     let sortQuery = ` ORDER BY price ${sortType}`;
@@ -119,8 +130,8 @@ async function FetchFilteredCloths(categories, sortType, discount) {
 
   pg_query += `) row;`;
 
-  values = categories;
-
+  console.log(pg_query);
+  console.log(values);
   try {
     const result = await client.query(pg_query, values);
     return result.rows.map((row) => row);
