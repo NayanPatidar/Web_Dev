@@ -137,7 +137,8 @@ app.get("/products/men/testing", async (req, res) => {
     const categoryFilter = req.query.category;
     const sorting = req.query.sort;
     const discountFilter = req.query.discount;
-    let category, sortType, discount;
+    const sizeFilter = req.query.size;
+    let category, sortType, discount, size;
 
     if (!Array.isArray(categoryFilter) && categoryFilter != undefined) {
       category = [categoryFilter];
@@ -145,6 +146,14 @@ app.get("/products/men/testing", async (req, res) => {
       category = "";
     } else {
       category = categoryFilter;
+    }
+
+    if (!Array.isArray(sizeFilter) && sizeFilter != undefined) {
+      size = [sizeFilter];
+    } else if (!Array.isArray(sizeFilter)) {
+      size = "";
+    } else {
+      size = sizeFilter;
     }
 
     if (sorting == undefined) {
@@ -161,6 +170,7 @@ app.get("/products/men/testing", async (req, res) => {
 
     if (
       (!categoryFilter || Object.keys(categoryFilter).length === 0) &&
+      (!sizeFilter || Object.keys(sizeFilter).length === 0) &&
       (!sorting || Object.keys(sorting).length === 0) &&
       (!discountFilter || Object.keys(discountFilter).length === 0)
     ) {
@@ -171,7 +181,8 @@ app.get("/products/men/testing", async (req, res) => {
     const clothsData = await TestingFetchFilteredCloths(
       category,
       sorting,
-      discount
+      discount,
+      size
     );
     res.json({ clothsData });
   } catch (error) {
