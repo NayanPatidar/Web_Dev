@@ -70,8 +70,18 @@ async function FetchFilteredCloths(categories, sortType, discount) {
   let values = [];
 
   pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-                FROM (SELECT * FROM cloth_basic_info `;
-
+                FROM (SELECT 
+                  cb.product_id, 
+                  cb.product_name, 
+                  cb.genericdesc, 
+                  cb.photo1, 
+                  cb.category, 
+                  cb.price, 
+                  cb.discount,
+                  cb.mrp,
+                  array_agg(cs.size_id) 
+            FROM cloth_basic_info cb
+            JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
   if (categories) {
     const placeholders = categories
       .map((category, index) => `$${index + 1}`)
@@ -92,10 +102,21 @@ async function FetchFilteredCloths(categories, sortType, discount) {
     pg_query += discountQuery;
   }
 
+  pg_query += `GROUP BY 
+  cb.product_id, 
+  cb.product_name, 
+  cb.genericdesc, 
+  cb.photo1, 
+  cb.category, 
+  cb.price, 
+  cb.discount,
+  cb.mrp`;
+
   if (sortType) {
-    let sortQuery = `ORDER BY price ${sortType}`;
+    let sortQuery = ` ORDER BY price ${sortType}`;
     pg_query += sortQuery;
   }
+
   pg_query += `) row;`;
 
   values = categories;
@@ -114,19 +135,18 @@ async function TestingFetchFilteredCloths(categories, sortType, discount) {
   let values = [];
 
   pg_query = `SELECT ROW_TO_JSON(row) AS Cloths
-                FROM (SELECT     
-                            cb.product_id, 
-                            cb.product_name, 
-                            cb.genericdesc, 
-                            cb.photo1, 
-                            cb.category, 
-                            cb.price, 
-                            cb.discount,
-                            cb.mrp,
-                            array_agg(cs.size_id) 
-                      FROM cloth_basic_info cb
-                      JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
-
+                FROM (SELECT 
+                  cb.product_id, 
+                  cb.product_name, 
+                  cb.genericdesc, 
+                  cb.photo1, 
+                  cb.category, 
+                  cb.price, 
+                  cb.discount,
+                  cb.mrp,
+                  array_agg(cs.size_id) 
+            FROM cloth_basic_info cb
+            JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
   if (categories) {
     const placeholders = categories
       .map((category, index) => `$${index + 1}`)
@@ -147,19 +167,23 @@ async function TestingFetchFilteredCloths(categories, sortType, discount) {
     pg_query += discountQuery;
   }
 
+  pg_query += `GROUP BY 
+  cb.product_id, 
+  cb.product_name, 
+  cb.genericdesc, 
+  cb.photo1, 
+  cb.category, 
+  cb.price, 
+  cb.discount,
+  cb.mrp
+  
+  HAVING 
+    ARRAY[1, 2, 3,4] <@ array_agg(cs.size_id) `;
+
   if (sortType) {
-    let sortQuery = `ORDER BY price ${sortType}`;
+    let sortQuery = ` ORDER BY price ${sortType}`;
     pg_query += sortQuery;
   }
-  pg_query += `GROUP BY 
-              cb.product_id, 
-              cb.product_name, 
-              cb.genericdesc, 
-              cb.photo1, 
-              cb.category, 
-              cb.price, 
-              cb.discount,
-              cb.mrp`;
 
   pg_query += `) row;`;
 
