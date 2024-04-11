@@ -65,7 +65,13 @@ async function FetchAllCloths() {
   }
 }
 
-async function FetchFilteredCloths(categories, sortType, discount, size) {
+async function FetchFilteredCloths(
+  categories,
+  sortType,
+  discount,
+  size,
+  search
+) {
   let pg_query;
   let values = [];
 
@@ -79,14 +85,16 @@ async function FetchFilteredCloths(categories, sortType, discount, size) {
                   cb.price, 
                   cb.discount,
                   cb.mrp,
+                  cd.maindescription,
                   array_agg(cs.size_id) 
             FROM cloth_basic_info cb
-            JOIN cloth_size cs ON cb.product_id = cs.cloth_id `;
+            JOIN cloth_size cs ON cb.product_id = cs.cloth_id 
+            JOIN cloth_detailed_info cd ON cb.product_id = cd.product_id `;
   if (categories) {
     const placeholders = categories
       .map((category, index) => `$${index + 1 + values.length}`)
       .join(",");
-    let categoryQuery = ` WHERE category IN (${placeholders}) `;
+    let categoryQuery = ` WHERE cb.category IN (${placeholders}) `;
     pg_query += categoryQuery;
     values = values.concat(categories);
   }
@@ -103,6 +111,18 @@ async function FetchFilteredCloths(categories, sortType, discount, size) {
     pg_query += discountQuery;
   }
 
+  if (search) {
+    let searchQuery = "";
+    if (categories || discount) {
+      searchQuery += `AND`;
+    } else {
+      searchQuery += `WHERE`;
+    }
+    searchQuery += ` genericdesc ILIKE '%${search}%' OR product_name ILIKE '%${search}%' OR maindescription ILIKE '%${search}% '
+    `;
+    pg_query += searchQuery
+  }
+
   pg_query += `GROUP BY 
   cb.product_id, 
   cb.product_name, 
@@ -111,7 +131,8 @@ async function FetchFilteredCloths(categories, sortType, discount, size) {
   cb.category, 
   cb.price, 
   cb.discount,
-  cb.mrp `;
+  cb.mrp,
+  cd.maindescription `;
 
   if (size) {
     const placeholders = size
@@ -131,7 +152,8 @@ async function FetchFilteredCloths(categories, sortType, discount, size) {
   pg_query += `) row;`;
 
   console.log(pg_query);
-  console.log(values);
+  console.log(`${values} - Values`);
+  console.log(`${search} - Search`);
   try {
     const result = await client.query(pg_query, values);
     return result.rows.map((row) => row);
