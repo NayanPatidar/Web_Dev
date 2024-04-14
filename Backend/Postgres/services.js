@@ -1,21 +1,20 @@
 const { client } = require("./pg_client");
 
-async function AddUser(username, password, email) {
-  const pg_query = ` INSERT INTO users (name , password, email) VALUES ($1 , $2, $3)`;
-  const result = await client.query(pg_query, [username, password, email]);
-  return result;
-}
+// async function AddUser(username, password, email) {
+//   const pg_query = ` INSERT INTO users (name , password, email) VALUES ($1 , $2, $3)`;
+//   const result = await client.query(pg_query, [username, password, email]);
+//   return result;
+// }
 
-async function CheckUser(username, email) {
-  const pg_query = ` SELECT user_id FROM users WHERE name = ($1) OR email = ($2)`;
-  const result = await client.query(pg_query, [username, email]);
-  const userId = result.rows[0]?.user_id;
-  return userId;
+async function CheckUser(email) {
+  const pg_query = ` SELECT user_id, password_hash FROM user_data WHERE email = ($1)`;
+  const result = await client.query(pg_query, [email]);
+  return result.rows[0];
 }
 
 async function FetchUser(user_id) {
   const pg_query = `SELECT ROW_TO_JSON(row) AS user_info 
-                    FROM ( SELECT user_id, name, email FROM users 
+                    FROM ( SELECT user_id, username, email FROM user_data 
                     WHERE user_id = ($1) ) row`;
   try {
     const result = await client.query(pg_query, [user_id]);
@@ -96,6 +95,7 @@ async function FetchFilteredCloths(
       .join(",");
     let categoryQuery = ` WHERE cb.category IN (${placeholders}) `;
     pg_query += categoryQuery;
+
     values = values.concat(categories);
   }
 
@@ -120,7 +120,7 @@ async function FetchFilteredCloths(
     }
     searchQuery += ` genericdesc ILIKE '%${search}%' OR product_name ILIKE '%${search}%' OR maindescription ILIKE '%${search}% '
     `;
-    pg_query += searchQuery
+    pg_query += searchQuery;
   }
 
   pg_query += `GROUP BY 
@@ -301,6 +301,34 @@ async function FetchUnknownUserCartProducts(cart_items) {
   }
 }
 
+async function CheckIfEmailExist(email) {
+  const pg_query = `SELECT COUNT(*) AS count FROM user_data WHERE email = $1`;
+
+  try {
+    const { rows } = await client.query(pg_query, [email]);
+    const { count } = rows[0];
+    return count > 0;
+  } catch (error) {
+    console.error(`Error while checking email existence: `, error.message);
+    return false;
+  }
+}
+
+async function AddUser(username, email, hashedPassword) {
+  const pg_query = `INSERT INTO user_data  (username, email, password_hash) VALUES
+                       ( $1, $2, $3 )
+                      `;
+
+  const values = [username, email, hashedPassword];
+  try {
+    const result = await client.query(pg_query, values);
+    console.log("Values inserted sucessfully");
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -313,4 +341,5 @@ module.exports = {
   CartProductsFetching,
   FetchUnknownUserCartProducts,
   TestingFetchFilteredCloths,
+  CheckIfEmailExist,
 };
