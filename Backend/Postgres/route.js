@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const { z, array } = require("zod");
+const bcrypt = require("bcrypt");
 
 const {
   AddUser,
@@ -20,6 +22,18 @@ const {
 const { generateJWT } = require("./jwtGeneration");
 const { jwtVerify } = require("./jwtVerification");
 
+const SignupSchema = z.object({
+  username: z.string().min(3).max(50),
+  email: z.string().email(),
+  password: z.string().min(8),
+  confirmPassword: z.string(),
+});
+
+const SignInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
 const PORT = 8080;
 app.use(bodyParser.json());
 
@@ -35,21 +49,101 @@ app.use(
   })
 );
 
-app.get("/user/signin", async (req, res) => {
-  const { name, password, email } = req.body;
-  const userId = await CheckUser(name, email);
+app.post("/signin", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+  const validating = validateSigninData(data);
+  if (!validating) {
+    return res.json(400).json({ message: "Validation Error" });
+  }
 
-  if (userId == undefined || userId == 0) {
-    AddUser(name, password, email);
-    res.send("No Accounts Exists! So User Has Been Added !!!");
-    return;
+  const email = data.email;
+  const password = data.password;
+
+  const password_hashed = await CheckUser(email);
+
+  if (password_hashed == undefined || password_hashed == 0) {
+    console.log(`Password is undefined`);
+    return res.status(404).json({ message: "No Accounts Exists !!!" });
   } else {
-    const user_data = await FetchUser(userId);
+    if (await comparePassword(password, password_hashed.password_hash)) {
+      console.log("Logged In");
+    } else {
+      console.log(`Wrong Credentials`);
+      return res.status(401).json({ message: "Wrong Credentials !!!" });
+    }
+    const user_data = await FetchUser(password_hashed.user_id);
     const token = generateJWT(user_data);
     res.json({ token });
     return;
   }
 });
+
+const validateSigninData = (data) => {
+  try {
+    SignInSchema.parse(data);
+    return true;
+  } catch (error) {
+    console.error("Error validating signin data:", error.errors);
+    return false;
+  }
+};
+
+app.post("/signup", async (req, res) => {
+  try {
+    const data = req.body;
+    const validating = validateSignupData(data);
+    if (!validating) {
+      return res.json(400).json({ message: "Validation Error" });
+    }
+
+    console.log("Received valid signup data:", data);
+
+    const username = data.username;
+    const email = data.email;
+    const password = await hashPassword(data.password);
+
+    if (await AddUser(username, email, password)) {
+      console.log(`User Added Successfully`);
+      res.status(201).json({ message: "Signup successful" });
+    } else {
+      console.log(`Failed Adding User `);
+      res.status(400).json({ message: "Signup failed" });
+    }
+  } catch (error) {
+    console.error("Error during signup : ", error.message);
+  }
+});
+
+const validateSignupData = (data) => {
+  try {
+    SignupSchema.parse(data);
+    console.log("Signup data is valid.");
+    return true;
+  } catch (error) {
+    console.error("Error validating signup data:", error.errors);
+    return false;
+  }
+};
+
+const hashPassword = async (password) => {
+  try {
+    const salt = await bcrypt.genSalt(8);
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
+  } catch (error) {
+    console.error("Error While Hashing the Password");
+  }
+};
+
+const comparePassword = async (password, hash) => {
+  try {
+    return await bcrypt.compare(password, hash);
+  } catch (error) {
+    console.error("Error While Comparing the Password:", error);
+    return false;
+  }
+};
 
 app.get("/users/mainpage/", async (req, res) => {
   try {
@@ -147,6 +241,8 @@ app.get("/products/men", async (req, res) => {
     if (search) {
       category = "";
     }
+
+    console.log(category);
 
     const clothsData = await FetchFilteredCloths(
       category,

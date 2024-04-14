@@ -12,6 +12,11 @@ const client = new Client({
   port: "5432",
 });
 
+// const connectionString = process.env.POSTGRES_SUPABASE_CONNECTION_STRING;
+// const client = new Client({
+//   connectionString,
+// });
+
 client
   .connect()
   .then(() => {
