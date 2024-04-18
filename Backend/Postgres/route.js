@@ -50,8 +50,9 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow requests from this origin
-    allowedHeaders: ["Content-Type"], // Allow 'Content-Type' header
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
@@ -363,6 +364,7 @@ app.post("/cart/tempUser", async (req, res) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
+  console.log(req.headers);
   console.log(token);
   if (!token) {
     return res.status(401).json({ error: "No token provided" });
@@ -389,17 +391,19 @@ app.post("/addCardItem", verifyToken, async (req, res) => {
     const ItemPresence = await CheckCartItem(userId, productId, size);
     console.log(ItemPresence);
 
-    if (ItemPresence.length == 0 && userId && productId && quantity && size) {
-      AddCartItem(userId, productId, quantity, size);
-      res.json({ message: "Item Added To Cart" });
-    } else if (!CheckSizePresence(size, ItemPresence)) {
-      AddCartItem(userId, productId, quantity, size);
-      res.json({ message: "Item Added To Cart With Different Size" });
-    } else if (
-      CheckQuantityPresence(quantity, userId, productId, size, ItemPresence)
-    ) {
-      UpdateCartItem(size, quantity, userId, productId);
-      res.json({ message: "Item quantity increased" });
+    if (size != undefined && quantity != undefined  ) {
+      if (ItemPresence.length == 0 && userId && productId && quantity && size) {
+        AddCartItem(userId, productId, quantity, size);
+        res.json({ message: "Item Added To Cart" });
+      } else if (!CheckSizePresence(size, ItemPresence)) {
+        AddCartItem(userId, productId, quantity, size);
+        res.json({ message: "Item Added To Cart With Different Size" });
+      } else if (
+        CheckQuantityPresence(quantity, userId, productId, size, ItemPresence)
+      ) {
+        UpdateCartItem(size, quantity, userId, productId);
+        res.json({ message: "Item quantity increased" });
+      }
     }
   } catch (error) {
     console.log("Error while Add Cart Item : ", error.message);
@@ -417,6 +421,7 @@ function extractToken(authorizedHeader) {
 
 function CheckSizePresence(size, ItemPresence) {
   let present = false;
+  console.log(size);
   ItemPresence.map((item) => (present = item.product.size == size.toString()));
   console.log(`Present - ${present}`);
   return present;
