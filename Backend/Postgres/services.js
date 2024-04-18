@@ -266,7 +266,7 @@ async function FetchOneProduct(product_id) {
 }
 
 async function CartProductsFetching() {
-  const pg_query = `SELECT ROW_TO_JSON(row) AS cart
+  const pg_query = `SELECT ROW_TO_JSON( ) AS cart
   FROM (
     SELECT * 
     FROM cloth_basic_info
@@ -329,6 +329,64 @@ async function AddUser(username, email, hashedPassword) {
   }
 }
 
+async function AddCartItem(user_id, product_id, size, quantity) {
+  pg_query = `INSERT INTO user_cart_data (user_id, product_id, quantity, size)
+  VALUES ($1,$2, $3, $4)`;
+
+  try {
+    const result = await client.query(pg_query, [
+      user_id,
+      product_id,
+      size,
+      quantity,
+    ]);
+    return 1;
+  } catch (error) {
+    console.error("Error while inserting values: ", error.message);
+    return 0;
+  }
+}
+
+async function CheckCartItem(user_id, product_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS product 
+  FROM (
+      SELECT 
+          user_id AS user_id,
+          product_id AS product_id,
+          quantity AS quantity,
+          size AS size
+      FROM user_cart_data 
+      WHERE product_id = $1 AND user_id = $2
+  ) as row`;
+
+  try {
+    const result = await client.query(pg_query, [product_id, user_id]);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error while Checking values: ", error.message);
+    return 0;
+  }
+}
+
+async function UpdateCartItem(size, quantity, user_id, product_id) {
+  pg_query = `UPDATE user_cart_data 
+  SET size = $1, quantity = $2
+  WHERE user_id = $3 AND product_id = $4 AND size = $5`;
+  try {
+    const result = await client.query(pg_query, [
+      size,
+      quantity,
+      user_id,
+      product_id,
+      size
+    ]);
+    return 1;
+  } catch (error) {
+    console.error("Error while Checking values: ", error.message);
+    return 0;
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -342,4 +400,7 @@ module.exports = {
   FetchUnknownUserCartProducts,
   TestingFetchFilteredCloths,
   CheckIfEmailExist,
+  AddCartItem,
+  CheckCartItem,
+  UpdateCartItem,
 };
