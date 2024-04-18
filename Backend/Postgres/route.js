@@ -4,6 +4,10 @@ const cors = require("cors");
 const app = express();
 const { z, array } = require("zod");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const { JWT_SECRET_KEY } = process.env;
 
 const {
   AddUser,
@@ -17,6 +21,9 @@ const {
   CartProductsFetching,
   FetchUnknownUserCartProducts,
   TestingFetchFilteredCloths,
+  AddCartItem,
+  CheckCartItem,
+  UpdateCartItem,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -31,7 +38,6 @@ const SignupSchema = z.object({
 
 const SignInSchema = z.object({
   email: z.string().email(),
-  password: z.string().min(8),
 });
 
 const PORT = 8080;
@@ -53,6 +59,7 @@ app.post("/signin", async (req, res) => {
   const data = req.body;
   console.log(data);
   const validating = validateSigninData(data);
+
   if (!validating) {
     return res.json(400).json({ message: "Validation Error" });
   }
@@ -64,16 +71,18 @@ app.post("/signin", async (req, res) => {
 
   if (password_hashed == undefined || password_hashed == 0) {
     console.log(`Password is undefined`);
-    return res.status(404).json({ message: "No Accounts Exists !!!" });
+    return res.json({ message: "No Accounts Exists !!!" });
   } else {
     if (await comparePassword(password, password_hashed.password_hash)) {
       console.log("Logged In");
     } else {
       console.log(`Wrong Credentials`);
-      return res.status(401).json({ message: "Wrong Credentials !!!" });
+      return res.json({ message: "Wrong Credentials !!!" });
     }
     const user_data = await FetchUser(password_hashed.user_id);
-    const token = generateJWT(user_data);
+    const token = jwt.sign({ userData: user_data }, JWT_SECRET_KEY, {
+      expiresIn: "2h",
+    });
     res.json({ token });
     return;
   }
@@ -352,12 +361,85 @@ app.post("/cart/tempUser", async (req, res) => {
   }
 });
 
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  console.log(token);
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
+    req.user = decoded;
+    console.log(decoded);
+    next();
+  } catch (err) {
+    return res.status(403).json({ error: "Invalid token" });
+  }
+};
+
+app.post("/addCardItem", verifyToken, async (req, res) => {
+  const userId = req.user.userData.user_id;
+  const productId = req.body.product_id;
+  const quantity = req.body.quantity;
+  const size = req.body.size;
+  console.log(`${userId} ${productId} ${quantity} ${size}`);
+
+  try {
+    const ItemPresence = await CheckCartItem(userId, productId, size);
+    console.log(ItemPresence);
+
+    if (ItemPresence.length == 0 && userId && productId && quantity && size) {
+      AddCartItem(userId, productId, quantity, size);
+      res.json({ message: "Item Added To Cart" });
+    } else if (!CheckSizePresence(size, ItemPresence)) {
+      AddCartItem(userId, productId, quantity, size);
+      res.json({ message: "Item Added To Cart With Different Size" });
+    } else if (
+      CheckQuantityPresence(quantity, userId, productId, size, ItemPresence)
+    ) {
+      UpdateCartItem(size, quantity, userId, productId);
+      res.json({ message: "Item quantity increased" });
+    }
+  } catch (error) {
+    console.log("Error while Add Cart Item : ", error.message);
+    res.json({ message: `Error While Adding Item To Cart : ${error.message}` });
+  }
+});
+
 function extractToken(authorizedHeader) {
   if (authorizedHeader.startsWith("Bearer ")) {
     return authorizedHeader.substring(7);
   } else {
     return null;
   }
+}
+
+function CheckSizePresence(size, ItemPresence) {
+  let present = false;
+  ItemPresence.map((item) => (present = item.product.size == size.toString()));
+  console.log(`Present - ${present}`);
+  return present;
+}
+
+function CheckQuantityPresence(
+  quantity,
+  user_id,
+  product_id,
+  size,
+  ItemPresence
+) {
+  let present = false;
+  ItemPresence.map(
+    (item) =>
+      (present =
+        item.product.product_id == product_id &&
+        item.product.size == size.toString() &&
+        item.product.user_id == user_id &&
+        item.product.quantity != quantity)
+  );
+  console.log(`Present - ${present}`);
+  return present;
 }
 
 app.listen(PORT, () => console.log(`Server is running on the port ${PORT}`));
