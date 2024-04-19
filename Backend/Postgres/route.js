@@ -24,6 +24,7 @@ const {
   AddCartItem,
   CheckCartItem,
   UpdateCartItem,
+  GetPermanentUserCartDetails,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -175,7 +176,7 @@ app.get("/users/mainpage/", async (req, res) => {
 app.get("/mainpage/images", async (req, res) => {
   try {
     const images = await FetchImages();
-    console.log(images);
+    // console.log(images);
     res.json({ images });
   } catch (error) {
     res.send(401).json({ error: "Images Not Found " });
@@ -185,7 +186,7 @@ app.get("/mainpage/images", async (req, res) => {
 app.get("/mainpage/TShirts", async (req, res) => {
   try {
     const tshirtsDetails = await FetchHomePageTShirts();
-    console.log(tshirtsDetails);
+    // console.log(tshirtsDetails);
     res.json({ tshirtsDetails });
   } catch (error) {
     res.send(401).json({ error: "Tshirts Not Found " });
@@ -242,17 +243,17 @@ app.get("/products/men", async (req, res) => {
       (!discountFilter || Object.keys(discountFilter).length === 0) &&
       (!searching || searching.length === 0)
     ) {
-      console.log("This is the Fetch All Cloths");
+      // console.log("This is the Fetch All Cloths");
       const clothsData = await FetchAllCloths();
       return res.json({ clothsData });
     }
-    console.log("This is filtering data");
+    // console.log("This is filtering data");
 
     if (search) {
       category = "";
     }
 
-    console.log(category);
+    // console.log(category);
 
     const clothsData = await FetchFilteredCloths(
       category,
@@ -364,8 +365,7 @@ app.post("/cart/tempUser", async (req, res) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  console.log(req.headers);
-  console.log(token);
+  // console.log(token);
   if (!token) {
     return res.status(401).json({ error: "No token provided" });
   }
@@ -373,25 +373,24 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.user = decoded;
-    console.log(decoded);
+    // console.log(decoded);
     next();
   } catch (err) {
     return res.status(403).json({ error: "Invalid token" });
   }
 };
 
-app.post("/addCardItem", verifyToken, async (req, res) => {
+app.post("/AddCardItem", verifyToken, async (req, res) => {
   const userId = req.user.userData.user_id;
   const productId = req.body.product_id;
   const quantity = req.body.quantity;
   const size = req.body.size;
-  console.log(`${userId} ${productId} ${quantity} ${size}`);
 
   try {
     const ItemPresence = await CheckCartItem(userId, productId, size);
-    console.log(ItemPresence);
+    console.log("Add Cart Item");
 
-    if (size != undefined && quantity != undefined  ) {
+    if (size != undefined && quantity != undefined) {
       if (ItemPresence.length == 0 && userId && productId && quantity && size) {
         AddCartItem(userId, productId, quantity, size);
         res.json({ message: "Item Added To Cart" });
@@ -411,6 +410,20 @@ app.post("/addCardItem", verifyToken, async (req, res) => {
   }
 });
 
+app.get("/cart/permUser", verifyToken, async (req, res) => {
+  try {
+    const CartData = await GetPermanentUserCartDetails(
+      req.user.userData.user_id
+    );
+    // console.log("Get Data For Perm User");
+    res.json({ CartData });
+    return;
+  } catch (error) {
+    res.json({ message: `Error is Fetching ${error.message}` });
+    console.log(`Error Fetching the Data : `, error.message);
+  }
+});
+
 function extractToken(authorizedHeader) {
   if (authorizedHeader.startsWith("Bearer ")) {
     return authorizedHeader.substring(7);
@@ -421,9 +434,7 @@ function extractToken(authorizedHeader) {
 
 function CheckSizePresence(size, ItemPresence) {
   let present = false;
-  console.log(size);
   ItemPresence.map((item) => (present = item.product.size == size.toString()));
-  console.log(`Present - ${present}`);
   return present;
 }
 
@@ -443,7 +454,6 @@ function CheckQuantityPresence(
         item.product.user_id == user_id &&
         item.product.quantity != quantity)
   );
-  console.log(`Present - ${present}`);
   return present;
 }
 
