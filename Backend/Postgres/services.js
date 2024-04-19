@@ -378,12 +378,27 @@ async function UpdateCartItem(size, quantity, user_id, product_id) {
       quantity,
       user_id,
       product_id,
-      size
+      size,
     ]);
     return 1;
   } catch (error) {
     console.error("Error while Checking values: ", error.message);
     return 0;
+  }
+}
+
+async function GetPermanentUserCartDetails(user_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS cloths FROM (
+    SELECT * FROM user_cart_data uc
+    JOIN cloth_basic_info cb ON cb.product_id = uc.product_id
+    WHERE user_id = $1
+  ) as row`;
+
+  try {
+    const productData = await client.query(pg_query, [user_id]);
+    return productData.rows.map((products) => products);
+  } catch (error) {
+    console.error(`Error while fetching the cart_items : `, error.message);
   }
 }
 
@@ -403,4 +418,5 @@ module.exports = {
   AddCartItem,
   CheckCartItem,
   UpdateCartItem,
+  GetPermanentUserCartDetails,
 };
