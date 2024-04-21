@@ -25,6 +25,8 @@ const {
   CheckCartItem,
   UpdateCartItem,
   GetPermanentUserCartDetails,
+  DeleteCartItem,
+  AddDefaultAddress,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -52,7 +54,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -61,14 +63,11 @@ app.post("/signin", async (req, res) => {
   const data = req.body;
   console.log(data);
   const validating = validateSigninData(data);
-
   if (!validating) {
     return res.json(400).json({ message: "Validation Error" });
   }
-
   const email = data.email;
   const password = data.password;
-
   const password_hashed = await CheckUser(email);
 
   if (password_hashed == undefined || password_hashed == 0) {
@@ -83,7 +82,7 @@ app.post("/signin", async (req, res) => {
     }
     const user_data = await FetchUser(password_hashed.user_id);
     const token = jwt.sign({ userData: user_data }, JWT_SECRET_KEY, {
-      expiresIn: "2h",
+      expiresIn: "12h",
     });
     res.json({ token });
     return;
@@ -114,17 +113,36 @@ app.post("/signup", async (req, res) => {
     const email = data.email;
     const password = await hashPassword(data.password);
 
-    if (await AddUser(username, email, password)) {
+    const password_hashed = await CheckUser(email);
+
+    if (password_hashed == undefined || password_hashed == 0) {
+      await AddUser(username, email, password);
       console.log(`User Added Successfully`);
+      NewUserAddDefaultAddress(email);
       res.status(201).json({ message: "Signup successful" });
     } else {
-      console.log(`Failed Adding User `);
-      res.status(400).json({ message: "Signup failed" });
+      console.log(`User Already Exist `);
+      res.status(400).json({  message: "User already exist"  });
     }
   } catch (error) {
     console.error("Error during signup : ", error.message);
+    res.status(400);
   }
 });
+
+const NewUserAddDefaultAddress = async (email) => {
+  try {
+    const password_hashed = await CheckUser(email);
+
+    if (await AddDefaultAddress(password_hashed.user_id)) {
+      console.log("Added Default Address");
+    } else {
+      console.log("Unable to add Default Address");
+    }
+  } catch (error) {
+    console.error("Error during Adding Deafult Address  :", error.message);
+  }
+};
 
 const validateSignupData = (data) => {
   try {
@@ -379,8 +397,34 @@ const verifyToken = (req, res, next) => {
     return res.status(403).json({ error: "Invalid token" });
   }
 };
+app.post("/UpdateUserCart", verifyToken, async (req, res) => {
+  const userId = req.user.userData.user_id;
+  const productId = req.body.product_id;
+  const quantity = req.body.quantity;
+  const size = req.body.size;
+  const cartItemId = req.body.cart_item_id;
 
-app.post("/AddCardItem", verifyToken, async (req, res) => {
+  try {
+    console.log("Update User Cart");
+    UpdateCartItem(cartItemId, userId, productId, quantity, size);
+    res.json({ message: "Item Updated In Cart" });
+  } catch (error) {
+    console.error("Error While Updating Cart: ", error.message);
+  }
+});
+
+app.delete("/DeleteUserCartItem", verifyToken, async (req, res) => {
+  const cartItemId = req.body.cart_item_id;
+  try {
+    console.log("Delete User Cart");
+    const deleteCartItem = await DeleteCartItem(cartItemId);
+    res.json({ message: "Item Deleted In Cart" });
+  } catch (error) {
+    console.error("Error While Deleting Cart: ", error.message);
+  }
+});
+
+app.post("/AddUserCart", verifyToken, async (req, res) => {
   const userId = req.user.userData.user_id;
   const productId = req.body.product_id;
   const quantity = req.body.quantity;
@@ -397,11 +441,6 @@ app.post("/AddCardItem", verifyToken, async (req, res) => {
       } else if (!CheckSizePresence(size, ItemPresence)) {
         AddCartItem(userId, productId, quantity, size);
         res.json({ message: "Item Added To Cart With Different Size" });
-      } else if (
-        CheckQuantityPresence(quantity, userId, productId, size, ItemPresence)
-      ) {
-        UpdateCartItem(size, quantity, userId, productId);
-        res.json({ message: "Item quantity increased" });
       }
     }
   } catch (error) {
@@ -410,12 +449,12 @@ app.post("/AddCardItem", verifyToken, async (req, res) => {
   }
 });
 
-app.get("/cart/permUser", verifyToken, async (req, res) => {
+app.get("/cart/PermUserData", verifyToken, async (req, res) => {
   try {
     const CartData = await GetPermanentUserCartDetails(
       req.user.userData.user_id
     );
-    // console.log("Get Data For Perm User");
+    console.log("Get Data For Perm User");
     res.json({ CartData });
     return;
   } catch (error) {
