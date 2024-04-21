@@ -428,6 +428,21 @@ async function AddDefaultAddress(user_id) {
   }
 }
 
+async function FetchUserAddress(user_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS ADDRESS FROM (
+    SELECT (address) FROM user_account_info
+    WHERE user_id = $1
+    ) AS ROW`;
+
+  try {
+    const Address = await client.query(pg_query, [user_id]);
+    return Address.rows.map((item) => item);
+  } catch (error) {
+    console.log("Error While Fetching Address : ", error.message);
+    return 0;
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -447,4 +462,5 @@ module.exports = {
   GetPermanentUserCartDetails,
   DeleteCartItem,
   AddDefaultAddress,
+  FetchUserAddress,
 };
