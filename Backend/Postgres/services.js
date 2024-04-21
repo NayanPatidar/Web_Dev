@@ -1,10 +1,10 @@
 const { client } = require("./pg_client");
 
-// async function AddUser(username, password, email) {
-//   const pg_query = ` INSERT INTO users (name , password, email) VALUES ($1 , $2, $3)`;
-//   const result = await client.query(pg_query, [username, password, email]);
-//   return result;
-// }
+async function AddUser(username, password, email) {
+  const pg_query = ` INSERT INTO users (name , password, email) VALUES ($1 , $2, $3)`;
+  const result = await client.query(pg_query, [username, password, email]);
+  return result;
+}
 
 async function CheckUser(email) {
   const pg_query = ` SELECT user_id, password_hash FROM user_data WHERE email = ($1)`;
@@ -368,21 +368,34 @@ async function CheckCartItem(user_id, product_id) {
   }
 }
 
-async function UpdateCartItem(size, quantity, user_id, product_id) {
+async function UpdateCartItem(cartItemId, userId, productId, quantity, size) {
   pg_query = `UPDATE user_cart_data 
   SET size = $1, quantity = $2
-  WHERE user_id = $3 AND product_id = $4 AND size = $5`;
+  WHERE id = $3 AND user_id = $4 AND product_id = $5 `;
   try {
     const result = await client.query(pg_query, [
       size,
       quantity,
-      user_id,
-      product_id,
-      size,
+      cartItemId,
+      userId,
+      productId,
     ]);
-    return 1;
+    return result;
   } catch (error) {
-    console.error("Error while Checking values: ", error.message);
+    console.error("Error while Updating values: ", error.message);
+    return 0;
+  }
+}
+
+async function DeleteCartItem(cartItemId, userId) {
+  pg_query = `DELETE FROM user_cart_data 
+  WHERE id = $1 `;
+
+  try {
+    const result = await client.query(pg_query, [cartItemId]);
+    return result;
+  } catch (error) {
+    console.error("Error while Updating values: ", error.message);
     return 0;
   }
 }
@@ -399,6 +412,19 @@ async function GetPermanentUserCartDetails(user_id) {
     return productData.rows.map((products) => products);
   } catch (error) {
     console.error(`Error while fetching the cart_items : `, error.message);
+  }
+}
+
+async function AddDefaultAddress(user_id) {
+  pg_query = `INSERT INTO user_account_info (user_id, address) 
+  VALUES ($1, '[{"name":"John Doe","street":" 456 Maple Avenue","city":"Anytown","state":"California","country":"United States","zipCode":"123456","mobile":"1323534683"}]');`;
+
+  try {
+    const AddAddress = await client.query(pg_query, [user_id]);
+    return 1;
+  } catch (error) {
+    console.log("Error While Adding the Default Address : ", error.message);
+    return 0;
   }
 }
 
@@ -419,4 +445,6 @@ module.exports = {
   CheckCartItem,
   UpdateCartItem,
   GetPermanentUserCartDetails,
+  DeleteCartItem,
+  AddDefaultAddress,
 };
