@@ -27,6 +27,7 @@ const {
   GetPermanentUserCartDetails,
   DeleteCartItem,
   AddDefaultAddress,
+  FetchUserAddress,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -122,7 +123,7 @@ app.post("/signup", async (req, res) => {
       res.status(201).json({ message: "Signup successful" });
     } else {
       console.log(`User Already Exist `);
-      res.status(400).json({  message: "User already exist"  });
+      res.status(400).json({ message: "User already exist" });
     }
   } catch (error) {
     console.error("Error during signup : ", error.message);
@@ -460,6 +461,17 @@ app.get("/cart/PermUserData", verifyToken, async (req, res) => {
   } catch (error) {
     res.json({ message: `Error is Fetching ${error.message}` });
     console.log(`Error Fetching the Data : `, error.message);
+  }
+});
+
+app.get("/FetchAddress", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userData.user_id;
+    const Address = FetchUserAddress(userId);
+    res.json({ Address });
+  } catch (error) {
+    console.error("Unable to Fetch the Address : ", error.message);
+    res.json({ message: "Unable to Fetch the Address" });
   }
 });
 
