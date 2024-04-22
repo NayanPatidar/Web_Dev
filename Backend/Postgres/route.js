@@ -28,6 +28,7 @@ const {
   DeleteCartItem,
   AddDefaultAddress,
   FetchUserAddress,
+  AddUserAddress,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -382,7 +383,7 @@ app.post("/cart/tempUser", async (req, res) => {
   }
 });
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   // console.log(token);
   if (!token) {
@@ -392,7 +393,11 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     req.user = decoded;
-    // console.log(decoded);
+    const UserPresence = await CheckUser(req.user.userData.email);
+    if (UserPresence == undefined || UserPresence == 0) {
+      console.log("User Not Present");
+      throw new Error();
+    }
     next();
   } catch (err) {
     return res.status(403).json({ error: "Invalid token" });
@@ -455,7 +460,7 @@ app.get("/cart/PermUserData", verifyToken, async (req, res) => {
     const CartData = await GetPermanentUserCartDetails(
       req.user.userData.user_id
     );
-    console.log("Get Data For Perm User");
+    // console.log("Get Data For Perm User");
     res.json({ CartData });
     return;
   } catch (error) {
@@ -466,12 +471,77 @@ app.get("/cart/PermUserData", verifyToken, async (req, res) => {
 
 app.get("/FetchAddress", verifyToken, async (req, res) => {
   try {
+    console.log("In Fetch User Address");
     const userId = req.user.userData.user_id;
-    const Address = FetchUserAddress(userId);
+    const Address = await FetchUserAddress(userId);
+    // console.log(Address[0].address.address);
     res.json({ Address });
   } catch (error) {
     console.error("Unable to Fetch the Address : ", error.message);
     res.json({ message: "Unable to Fetch the Address" });
+  }
+});
+
+app.post("/address/add", verifyToken, async (req, res) => {
+  try {
+    const newAddress = req.body;
+    const userId = req.user.userData.user_id;
+    const existingAddress = await FetchUserAddress(userId);
+    existingAddress[0].address.address.push(newAddress);
+
+    console.log(JSON.stringify(existingAddress[0].address.address));
+    if (
+      await AddUserAddress(
+        JSON.stringify(existingAddress[0].address.address),
+        userId
+      )
+    ) {
+      // console.log("Added the User Address");
+      res.json({ message: "Added The Address" });
+    } else {
+      console.log("Failed to Add the User Address");
+      res.status(400).json({ message: "Failed to add Address" });
+    }
+  } catch (error) {
+    console.error("Unable to Add the Address : ", error.message);
+    res.status(400).json({ message: "Unable to Add the Address" });
+  }
+});
+
+app.delete("/address/delete", verifyToken, async (req, res) => {
+  try {
+    const AddressID = req.body.AddressId;
+    const userId = req.user.userData.user_id;
+    const existingAddress = await FetchUserAddress(userId);
+    if (
+      existingAddress[0].address.address.length != 0 &&
+      existingAddress &&
+      existingAddress != undefined
+    ) {
+      let userSetOne = existingAddress[0].address.address.slice(0, AddressID);
+      let userSetTwo = existingAddress[0].address.address.slice(
+        AddressID + 1,
+        existingAddress[0].address.address.length
+      );
+      userSetOne = userSetOne.concat(userSetTwo);
+      existingAddress[0].address.address = userSetOne;
+      // console.log(JSON.stringify(existingAddress[0].address.address));
+      if (
+        await AddUserAddress(
+          JSON.stringify(existingAddress[0].address.address),
+          userId
+        )
+      ) {
+        res.json({ message: "Deleted The Address" });
+      } else {
+        console.log("Failed to Delete the User Address");
+        res.status(400).json({ message: "Failed to Delete Address" });
+      }
+    } else {
+    }
+  } catch (error) {
+    console.error("Unable to Delete the Address : ", error.message);
+    res.status(400).json({ message: "Unable to Delete the Address" });
   }
 });
 
