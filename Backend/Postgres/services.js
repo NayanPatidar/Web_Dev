@@ -456,6 +456,30 @@ async function AddUserAddress(address, user_id) {
   }
 }
 
+async function AddProductToWishlist(user_id, product_id) {
+  pg_query = `INSERT INTO wishlist ( user_id , product_id ) 
+              VALUES ( $1 , $2 )`;
+  console.log(user_id, product_id);
+  try {
+    await client.query(pg_query, [user_id, product_id]);
+    return 1;
+  } catch (error) {
+    console.log("Error while Adding Product to Wishlist : ", error.message);
+  }
+}
+
+async function GetProductFromWishlist(user_id, product_id) {
+  pg_query = `SELECT * FROM wishlist
+              WHERE user_id = $1 AND product_id = $2 `;
+  console.log(user_id, product_id);
+  try {
+    const product = await client.query(pg_query, [user_id, product_id]);
+    return product.rows[0];
+  } catch (error) {
+    console.log("Error while Getting Product to Wishlist : ", error.message);
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -477,4 +501,6 @@ module.exports = {
   AddDefaultAddress,
   FetchUserAddress,
   AddUserAddress,
+  AddProductToWishlist,
+  GetProductFromWishlist,
 };
