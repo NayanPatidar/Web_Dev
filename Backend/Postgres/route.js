@@ -29,6 +29,8 @@ const {
   AddDefaultAddress,
   FetchUserAddress,
   AddUserAddress,
+  AddProductToWishlist,
+  GetProductFromWishlist,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -569,6 +571,32 @@ app.put("/address/update", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Unable to Modify the Address : ", error.message);
     res.status(400).json({ message: "Unable to Modify the Address" });
+  }
+});
+
+app.post("/wishlist/add", verifyToken, async (req, res) => {
+  try {
+    const userID = req.user.userData.user_id;
+    const ProductID = req.body.Product_Id;
+
+    if (userID != undefined && userID && ProductID != undefined && ProductID) {
+      console.log("Here");
+      const Product = await GetProductFromWishlist(userID, ProductID);
+      if (
+        Product == undefined &&
+        (await AddProductToWishlist(userID, ProductID))
+      ) {
+        res.json({ message: "Added Product to Wishlist" });
+      } else {
+        console.log("Failed to Add the Product to Wishlist");
+        res
+          .status(400)
+          .json({ message: "Failed to Add the Product to Wishlist" });
+      }
+    }
+  } catch (error) {
+    console.error("Unable to Add Product to Wishlist : ", error.message);
+    res.status(400).json({ message: "Unable to Add Product to Wishlist" });
   }
 });
 
