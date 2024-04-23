@@ -31,6 +31,8 @@ const {
   AddUserAddress,
   AddProductToWishlist,
   GetProductFromWishlist,
+  DeleteProductFromWishlist,
+  FetchAllProductsFromWishlist,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -580,7 +582,6 @@ app.post("/wishlist/add", verifyToken, async (req, res) => {
     const ProductID = req.body.Product_Id;
 
     if (userID != undefined && userID && ProductID != undefined && ProductID) {
-      console.log("Here");
       const Product = await GetProductFromWishlist(userID, ProductID);
       if (
         Product == undefined &&
@@ -597,6 +598,40 @@ app.post("/wishlist/add", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Unable to Add Product to Wishlist : ", error.message);
     res.status(400).json({ message: "Unable to Add Product to Wishlist" });
+  }
+});
+
+app.delete("/wishlist/delete", verifyToken, async (req, res) => {
+  try {
+    const userID = req.user.userData.user_id;
+    const ProductID = req.body.Product_Id;
+
+    if (userID != undefined && userID && ProductID != undefined && ProductID) {
+      if (await DeleteProductFromWishlist(userID, ProductID)) {
+        res.json({ message: "Deleted Product from Wishlist" });
+      } else {
+        console.log("Failed to Delete the Product from Wishlist");
+        res
+          .status(400)
+          .json({ message: "Failed to Delete the Product from Wishlist" });
+      }
+    }
+  } catch (error) {
+    console.error("Unable to Delete Product to Wishlist : ", error.message);
+    res.status(400).json({ message: "Unable to Delete Product from Wishlist" });
+  }
+});
+
+app.get("/wishlist/allProducts", verifyToken, async (req, res) => {
+  try {
+    const userID = req.user.userData.user_id;
+    if (userID != undefined && userID) {
+      const products = await FetchAllProductsFromWishlist(userID);
+      res.json({ products });
+    }
+  } catch (error) {
+    console.error("Unable to Fetch Products from Wishlist : ", error.message);
+    res.status(400).json({ message: "Unable to Fetch Products from Wishlist" });
   }
 });
 
