@@ -4,14 +4,20 @@ const Address = [
   { name: "King", Age: 21, DOB: 2007 },
 ];
 
-const UpdateAddress = (userNum) => {
+const DeleteAddress = (userNum) => {
   let userSetOne = Address.slice(0, userNum);
   let userSetTwo = Address.slice(userNum + 1, Address.length);
   //   console.log(userSetOne.concat(userSetTwo));
   userSetOne = userSetOne.concat(userSetTwo);
-  console.log(userSetOne);
+  //   console.log(userSetOne);
 
   return userSetOne;
 };
 
-console.log(UpdateAddress(0));
+const UpdateAddress = (userNum, UpdatedAddress) => {
+  const updatedAddresses = [...Address];
+  updatedAddresses[userNum] = UpdatedAddress;
+  return updatedAddresses;
+};
+
+console.log(UpdateAddress(0, { name: "Patidar", Age: 21, DOB: 2015 }));
