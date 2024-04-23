@@ -480,6 +480,36 @@ async function GetProductFromWishlist(user_id, product_id) {
   }
 }
 
+async function DeleteProductFromWishlist(user_id, product_id) {
+  pg_query = `DELETE FROM wishlist
+              WHERE user_id = $1 AND product_id = $2 `;
+  console.log(user_id, product_id);
+  try {
+    const product = await client.query(pg_query, [user_id, product_id]);
+    return 1;
+  } catch (error) {
+    console.log("Error while Getting Product to Wishlist : ", error.message);
+    return 0;
+  }
+}
+
+async function FetchAllProductsFromWishlist(user_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS cloths FROM (
+              SELECT * FROM wishlist wl
+              JOIN cloth_basic_info cb ON wl.product_id = wl.product_id
+              WHERE user_id = $1 
+              ) as row`;
+
+  console.log(user_id);
+  try {
+    const product = await client.query(pg_query, [user_id]);
+    return product.rows.map((product) => product);
+  } catch (error) {
+    console.log("Error while Getting Product to Wishlist : ", error.message);
+    return 0;
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -503,4 +533,6 @@ module.exports = {
   AddUserAddress,
   AddProductToWishlist,
   GetProductFromWishlist,
+  DeleteProductFromWishlist,
+  FetchAllProductsFromWishlist,
 };
