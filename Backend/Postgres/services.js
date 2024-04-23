@@ -446,7 +446,7 @@ async function FetchUserAddress(user_id) {
 async function AddUserAddress(address, user_id) {
   pg_query = `UPDATE user_account_info
     SET address = $1 WHERE user_id = $2`;
-  console.log(user_id);
+  console.log(user_id, address);
   try {
     const Address = await client.query(pg_query, [address, user_id]);
     return 1;

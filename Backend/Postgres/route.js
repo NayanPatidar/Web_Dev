@@ -56,7 +56,7 @@ app.use((req, res, next) => {
 app.use(
   cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "POST", "DELETE"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -537,11 +537,38 @@ app.delete("/address/delete", verifyToken, async (req, res) => {
         console.log("Failed to Delete the User Address");
         res.status(400).json({ message: "Failed to Delete Address" });
       }
-    } else {
     }
   } catch (error) {
     console.error("Unable to Delete the Address : ", error.message);
     res.status(400).json({ message: "Unable to Delete the Address" });
+  }
+});
+
+app.put("/address/update", verifyToken, async (req, res) => {
+  try {
+    const AddressID = req.body.AddressId;
+    const UpdatedAddress = req.body.Address;
+    const userId = req.user.userData.user_id;
+
+    const existingAddress = await FetchUserAddress(userId);
+    if (
+      existingAddress[0].address.address.length != 0 &&
+      existingAddress &&
+      existingAddress != undefined
+    ) {
+      const updatedAddresses = [...existingAddress[0].address.address];
+      updatedAddresses[AddressID] = UpdatedAddress;
+      console.log(JSON.stringify(updatedAddresses));
+      if (await AddUserAddress(JSON.stringify(updatedAddresses), userId)) {
+        res.json({ message: "Modified The Address" });
+      } else {
+        console.log("Failed to Modify the User Address");
+        res.status(400).json({ message: "Failed to Modify Address" });
+      }
+    }
+  } catch (error) {
+    console.error("Unable to Modify the Address : ", error.message);
+    res.status(400).json({ message: "Unable to Modify the Address" });
   }
 });
 
