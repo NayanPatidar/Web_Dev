@@ -387,6 +387,21 @@ app.post("/cart/tempUser", async (req, res) => {
   }
 });
 
+app.post("/wishlist/tempUser", async (req, res) => {
+  try {
+    let bodyData = req.body.productIds;
+    console.log("Fetch Wishlist Data");
+    if (bodyData && bodyData.length > 0) {
+      const CartData = await FetchUnknownUserCartProducts(bodyData);
+      res.json({ CartData });
+      return;
+    }
+    res.json({});
+  } catch (error) {
+    console.log(`Error Fetching the Data : `, error.message);
+  }
+});
+
 const verifyToken = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   // console.log(token);
@@ -442,8 +457,6 @@ app.post("/AddUserCart", verifyToken, async (req, res) => {
 
   try {
     const ItemPresence = await CheckCartItem(userId, productId, size);
-    console.log("Add Cart Item");
-
     if (size != undefined && quantity != undefined) {
       if (ItemPresence.length == 0 && userId && productId && quantity && size) {
         AddCartItem(userId, productId, quantity, size);
@@ -451,6 +464,8 @@ app.post("/AddUserCart", verifyToken, async (req, res) => {
       } else if (!CheckSizePresence(size, ItemPresence)) {
         AddCartItem(userId, productId, quantity, size);
         res.json({ message: "Item Added To Cart With Different Size" });
+      } else {
+        console.log("Item Already Present ");
       }
     }
   } catch (error) {
