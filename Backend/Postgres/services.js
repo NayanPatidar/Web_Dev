@@ -496,11 +496,9 @@ async function DeleteProductFromWishlist(user_id, product_id) {
 async function FetchAllProductsFromWishlist(user_id) {
   pg_query = `SELECT ROW_TO_JSON(row) AS cloths FROM (
               SELECT * FROM wishlist wl
-              JOIN cloth_basic_info cb ON wl.product_id = wl.product_id
-              WHERE user_id = $1 
+              JOIN cloth_basic_info cb ON cb.product_id = wl.product_id
+              WHERE wl.user_id = $1 
               ) as row`;
-
-  console.log(user_id);
   try {
     const product = await client.query(pg_query, [user_id]);
     return product.rows.map((product) => product);
@@ -509,6 +507,8 @@ async function FetchAllProductsFromWishlist(user_id) {
     return 0;
   }
 }
+
+
 
 module.exports = {
   AddUser,
