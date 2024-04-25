@@ -200,7 +200,6 @@ app.get("/users/mainpage/", async (req, res) => {
 app.get("/mainpage/images", async (req, res) => {
   try {
     const images = await FetchImages();
-    // console.log(images);
     res.json({ images });
   } catch (error) {
     res.send(401).json({ error: "Images Not Found " });
@@ -210,7 +209,6 @@ app.get("/mainpage/images", async (req, res) => {
 app.get("/mainpage/TShirts", async (req, res) => {
   try {
     const tshirtsDetails = await FetchHomePageTShirts();
-    // console.log(tshirtsDetails);
     res.json({ tshirtsDetails });
   } catch (error) {
     res.send(401).json({ error: "Tshirts Not Found " });
