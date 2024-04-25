@@ -27,11 +27,11 @@ async function FetchUser(user_id) {
 
 async function FetchImages() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS photos 
-                      FROM (	SELECT photo1
-                      FROM cloth_basic_info WHERE product_id IN (16,22,26) ) row;`;
+                      FROM (	SELECT photo1, category
+                      FROM cloth_basic_info WHERE product_id IN (12,43,26) ) row;`;
   try {
     const result = await client.query(pg_query);
-    return result.rows.map((row) => row.photos);
+    return result.rows.map((row) => row);
   } catch (error) {
     console.error("Erro fetching the images", error.message);
     throw error;
@@ -41,7 +41,20 @@ async function FetchImages() {
 async function FetchHomePageTShirts() {
   const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
                     FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1, product_id
-                    FROM cloth_basic_info WHERE product_id IN (28,29,14,15)) ROW;`;
+                    FROM cloth_basic_info WHERE product_id IN (28,29,33,15,38)) ROW;`;
+  try {
+    const result = await client.query(pg_query);
+    return result.rows.map((row) => row);
+  } catch (error) {
+    console.error("Error Fetching the Tshirt details", error.message);
+    throw error;
+  }
+}
+
+async function FetchHomePageNewArrivals() {
+  const pg_query = `SELECT ROW_TO_JSON(row) AS TShirts 
+  FROM ( SELECT product_name, price, GenericDesc, mrp, discount, photo1, product_id
+  FROM cloth_basic_info WHERE product_id IN (23, 27, 5, 41)) ROW;`;
   try {
     const result = await client.query(pg_query);
     return result.rows.map((row) => row);
@@ -508,8 +521,6 @@ async function FetchAllProductsFromWishlist(user_id) {
   }
 }
 
-
-
 module.exports = {
   AddUser,
   CheckUser,
@@ -535,4 +546,5 @@ module.exports = {
   GetProductFromWishlist,
   DeleteProductFromWishlist,
   FetchAllProductsFromWishlist,
+  FetchHomePageNewArrivals,
 };

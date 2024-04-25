@@ -33,6 +33,7 @@ const {
   GetProductFromWishlist,
   DeleteProductFromWishlist,
   FetchAllProductsFromWishlist,
+  FetchHomePageNewArrivals,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -209,6 +210,15 @@ app.get("/mainpage/images", async (req, res) => {
 app.get("/mainpage/TShirts", async (req, res) => {
   try {
     const tshirtsDetails = await FetchHomePageTShirts();
+    res.json({ tshirtsDetails });
+  } catch (error) {
+    res.send(401).json({ error: "Tshirts Not Found " });
+  }
+});
+
+app.get("/mainpage/NewArrivals", async (req, res) => {
+  try {
+    const tshirtsDetails = await FetchHomePageNewArrivals();
     res.json({ tshirtsDetails });
   } catch (error) {
     res.send(401).json({ error: "Tshirts Not Found " });
