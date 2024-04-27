@@ -20,5 +20,10 @@ function doSomething(keyPressed) {
 function firstElement(arr) {
     return arr[0];
 }
-const value = firstElement(["Nayan", "Patidar"]);
-console.log(value);
+// const value = firstElement(["Nayan", "Patidar"]);
+// console.log();
+function GenericfirstElement(arr) {
+    return arr[0];
+}
+const value = GenericfirstElement(["Nayan", "Patidar"]);
+console.log(value.toUpperCase());

@@ -28,5 +28,13 @@ function firstElement(arr: Input[]): Input {
   return arr[0];
 }
 
-const value = firstElement(["Nayan", "Patidar"]);
+// const value = firstElement(["Nayan", "Patidar"]);
 // console.log();
+
+function GenericfirstElement<T>(arr: T[]): T {
+    return arr[0];
+  }
+  
+  const value = GenericfirstElement(["Nayan", "Patidar"]);
+  console.log(value.toUpperCase());
+  
