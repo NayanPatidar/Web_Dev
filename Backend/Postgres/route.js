@@ -34,6 +34,7 @@ const {
   DeleteProductFromWishlist,
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
+  GetPermanentUserCartItemsPriceDetails,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -487,7 +488,19 @@ app.get("/cart/PermUserData", verifyToken, async (req, res) => {
     const CartData = await GetPermanentUserCartDetails(
       req.user.userData.user_id
     );
-    // console.log("Get Data For Perm User");
+    res.json({ CartData });
+    return;
+  } catch (error) {
+    res.json({ message: `Error is Fetching ${error.message}` });
+    console.log(`Error Fetching the Data : `, error.message);
+  }
+});
+
+app.post("/checkout/PermUserData/Details", verifyToken, async (req, res) => {
+  try {
+    const CartData = await GetPermanentUserCartItemsPriceDetails(
+      req.user.userData.user_id
+    );
     res.json({ CartData });
     return;
   } catch (error) {

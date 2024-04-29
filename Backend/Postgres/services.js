@@ -428,6 +428,28 @@ async function GetPermanentUserCartDetails(user_id) {
   }
 }
 
+async function GetPermanentUserCartItemsPriceDetails(user_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS PriceDetails FROM (
+    SELECT 
+    SUM(cb.mrp) AS total_mrp,
+    SUM(cb.price) AS total_price,
+    SUM(cb.mrp - cb.price) AS total_discount
+FROM 
+    user_cart_data uc
+JOIN 
+    cloth_basic_info cb ON cb.product_id = uc.product_id
+WHERE 
+    uc.user_id = $1
+  ) as row`;
+
+  try {
+    const productData = await client.query(pg_query, [user_id]);
+    return productData.rows.map((products) => products);
+  } catch (error) {
+    console.error(`Error while fetching the cart_items : `, error.message);
+  }
+}
+
 async function AddDefaultAddress(user_id) {
   pg_query = `INSERT INTO user_account_info (user_id, address) 
   VALUES ($1, '[{"name":"John Doe","street":" 456 Maple Avenue","city":"Anytown","state":"California","country":"United States","zipCode":"123456","mobile":"1323534683"}]');`;
@@ -547,4 +569,5 @@ module.exports = {
   DeleteProductFromWishlist,
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
+  GetPermanentUserCartItemsPriceDetails
 };
