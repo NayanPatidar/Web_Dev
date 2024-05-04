@@ -36,6 +36,7 @@ const {
   FetchHomePageNewArrivals,
   GetPermanentUserCartItemsPriceDetails,
   AddOrderDetailsForUser,
+  DeleteDataOnPlacingOrder,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -440,7 +441,6 @@ app.post("/UpdateUserCart", verifyToken, async (req, res) => {
   const cartItemId = req.body.cart_item_id;
 
   try {
-    console.log("Update User Cart");
     UpdateCartItem(cartItemId, userId, productId, quantity, size);
     res.json({ message: "Item Updated In Cart" });
   } catch (error) {
@@ -512,20 +512,12 @@ app.post("/checkout/PermUserData/Details", verifyToken, async (req, res) => {
 
 app.post("/order/confirmation", verifyToken, async (req, res) => {
   try {
-    const productId = req.body.product_id;
-    const quantity = req.body.quantity;
-    const size = req.body.size;
-    const amountPaid = req.body.amountPaid;
-    const addressId = req.body.addressId;
-
+    const addressId = req.body.address_Id;
     const CartData = await AddOrderDetailsForUser(
       req.user.userData.user_id,
-      productId,
-      quantity,
-      size,
-      amountPaid,
       addressId
     );
+    await DeleteDataOnPlacingOrder(req.user.userData.user_id);
     res.json({ CartData });
     return;
   } catch (error) {
