@@ -37,6 +37,7 @@ const {
   GetPermanentUserCartItemsPriceDetails,
   AddOrderDetailsForUser,
   DeleteDataOnPlacingOrder,
+  FetchOrderDeatilsForUser,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -518,6 +519,18 @@ app.post("/order/confirmation", verifyToken, async (req, res) => {
       addressId
     );
     await DeleteDataOnPlacingOrder(req.user.userData.user_id);
+    res.json({ CartData });
+    return;
+  } catch (error) {
+    res.json({ message: `Error in Adding Order ${error.message}` });
+    console.log(`Error in Adding Order : `, error.message);
+  }
+});
+
+app.get("/FetchOrders", verifyToken, async (req, res) => {
+  try {
+    const CartData = await FetchOrderDeatilsForUser(req.user.userData.user_id);
+    console.log(CartData);
     res.json({ CartData });
     return;
   } catch (error) {

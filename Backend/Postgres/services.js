@@ -1,3 +1,4 @@
+const { map } = require("zod");
 const { client } = require("./pg_client");
 
 async function AddUser(username, password, email) {
@@ -575,7 +576,25 @@ async function DeleteDataOnPlacingOrder(user_id) {
     const product = await client.query(pg_query, [user_id]);
     return 1;
   } catch (error) {
-    console.log("Error while Deleting Product from User Cart : ", error.message);
+    console.log(
+      "Error while Deleting Product from User Cart : ",
+      error.message
+    );
+    return 0;
+  }
+}
+
+async function FetchOrderDeatilsForUser(user_id) {
+  pg_query = `SELECT ROW_TO_JSON(row) AS orders FROM (
+    SELECT * FROM user_orders uo
+    JOIN cloth_basic_info cb ON cb.product_id = uo.product_id
+    WHERE user_id = $1
+  ) as row`;
+  try {
+    const product = await client.query(pg_query, [user_id]);
+    return product.rows.map((order) => order);
+  } catch (error) {
+    console.log("Error while Fetch Order Details : ", error.message);
     return 0;
   }
 }
@@ -608,5 +627,6 @@ module.exports = {
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
   GetPermanentUserCartItemsPriceDetails,
-  DeleteDataOnPlacingOrder
+  DeleteDataOnPlacingOrder,
+  FetchOrderDeatilsForUser,
 };
