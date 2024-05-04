@@ -543,6 +543,34 @@ async function FetchAllProductsFromWishlist(user_id) {
   }
 }
 
+async function AddOrderDetailsForUser(
+  user_id,
+  product_id,
+  quantity,
+  size,
+  amountPaid,
+  addressId
+) {
+  console.log(`${user_id} ${product_id} ${quantity} ${size} ${amountPaid} ${addressId}` );
+  pg_query = `INSERT INTO user_orders (user_id, product_id, quantity, size, amountPaid, addressId)
+  VALUES ($1, $2, $3, $4, $5, $6);
+  `;
+  try {
+    const product = await client.query(pg_query, [
+      user_id,
+      product_id,
+      quantity,
+      size,
+      amountPaid,
+      addressId,
+    ]);
+    return 1;
+  } catch (error) {
+    console.log("Error while Adding Product To the Address : ", error.message);
+    return 0;
+  }
+}
+
 module.exports = {
   AddUser,
   CheckUser,
@@ -565,9 +593,10 @@ module.exports = {
   FetchUserAddress,
   AddUserAddress,
   AddProductToWishlist,
+  AddOrderDetailsForUser,
   GetProductFromWishlist,
   DeleteProductFromWishlist,
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
-  GetPermanentUserCartItemsPriceDetails
+  GetPermanentUserCartItemsPriceDetails,
 };

@@ -35,6 +35,7 @@ const {
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
   GetPermanentUserCartItemsPriceDetails,
+  AddOrderDetailsForUser,
 } = require("./services");
 
 const { generateJWT } = require("./jwtGeneration");
@@ -506,6 +507,30 @@ app.post("/checkout/PermUserData/Details", verifyToken, async (req, res) => {
   } catch (error) {
     res.json({ message: `Error is Fetching ${error.message}` });
     console.log(`Error Fetching the Data : `, error.message);
+  }
+});
+
+app.post("/order/confirmation", verifyToken, async (req, res) => {
+  try {
+    const productId = req.body.product_id;
+    const quantity = req.body.quantity;
+    const size = req.body.size;
+    const amountPaid = req.body.amountPaid;
+    const addressId = req.body.addressId;
+
+    const CartData = await AddOrderDetailsForUser(
+      req.user.userData.user_id,
+      productId,
+      quantity,
+      size,
+      amountPaid,
+      addressId
+    );
+    res.json({ CartData });
+    return;
+  } catch (error) {
+    res.json({ message: `Error in Adding Order ${error.message}` });
+    console.log(`Error in Adding Order : `, error.message);
   }
 });
 
