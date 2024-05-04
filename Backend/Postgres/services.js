@@ -431,8 +431,8 @@ async function GetPermanentUserCartDetails(user_id) {
 async function GetPermanentUserCartItemsPriceDetails(user_id) {
   pg_query = `SELECT ROW_TO_JSON(row) AS PriceDetails FROM (
     SELECT 
-    SUM(cb.mrp) AS total_mrp,
-    SUM(cb.price) AS total_price,
+    SUM(cb.mrp*uc.quantity) AS total_mrp,
+    SUM(cb.price*uc.quantity) AS total_price,
     SUM(cb.mrp - cb.price) AS total_discount
 FROM 
     user_cart_data uc
@@ -543,30 +543,39 @@ async function FetchAllProductsFromWishlist(user_id) {
   }
 }
 
-async function AddOrderDetailsForUser(
-  user_id,
-  product_id,
-  quantity,
-  size,
-  amountPaid,
-  addressId
-) {
-  console.log(`${user_id} ${product_id} ${quantity} ${size} ${amountPaid} ${addressId}` );
-  pg_query = `INSERT INTO user_orders (user_id, product_id, quantity, size, amountPaid, addressId)
-  VALUES ($1, $2, $3, $4, $5, $6);
-  `;
-  try {
-    const product = await client.query(pg_query, [
-      user_id,
+async function AddOrderDetailsForUser(user_id, address_id) {
+  pg_query = `INSERT INTO user_orders (user_id, product_id, quantity, size, addressid)
+  SELECT 
+      $1 as user_id,
       product_id,
       quantity,
       size,
-      amountPaid,
-      addressId,
+    $2 as addressid
+  FROM 
+      user_cart_data
+  WHERE 
+      user_id = $3;`;
+  try {
+    const product = await client.query(pg_query, [
+      user_id,
+      address_id,
+      user_id,
     ]);
     return 1;
   } catch (error) {
     console.log("Error while Adding Product To the Address : ", error.message);
+    return 0;
+  }
+}
+
+async function DeleteDataOnPlacingOrder(user_id) {
+  pg_query = `DELETE FROM user_cart_data 
+  WHERE user_id = $1`;
+  try {
+    const product = await client.query(pg_query, [user_id]);
+    return 1;
+  } catch (error) {
+    console.log("Error while Deleting Product from User Cart : ", error.message);
     return 0;
   }
 }
@@ -599,4 +608,5 @@ module.exports = {
   FetchAllProductsFromWishlist,
   FetchHomePageNewArrivals,
   GetPermanentUserCartItemsPriceDetails,
+  DeleteDataOnPlacingOrder
 };
