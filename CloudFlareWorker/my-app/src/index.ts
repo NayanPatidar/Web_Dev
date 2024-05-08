@@ -1,5 +1,3 @@
-import { Response } from '@cloudflare/workers-types/experimental';
-
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		console.log(request.body);
@@ -15,7 +13,5 @@ export default {
 				Message: 'Not a Get Request Send ',
 			});
 		}
-
-		return new Response('Hello World!');
 	},
 };
