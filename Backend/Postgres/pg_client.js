@@ -1,6 +1,8 @@
 const { Client } = require("pg");
 require("dotenv").config();
 
+
+// For the Local Postgres
 // const { POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD } =
 //   process.env;
 
@@ -12,6 +14,8 @@ require("dotenv").config();
 //   port: "5432",
 // });
 
+
+// For the Supabase Provdied Postgres
 const connectionString = process.env.POSTGRES_SUPABASE_CONNECTION_STRING;
 const client = new Client({
   connectionString,
