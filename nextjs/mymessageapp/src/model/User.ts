@@ -17,6 +17,7 @@ const MessageSchema: Schema<Message> = new Schema({
     }
 })
 
+// It is the interface for the User 
 export interface User extends Document {
     username: string;
     email: string;
