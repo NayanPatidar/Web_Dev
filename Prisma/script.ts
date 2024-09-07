@@ -8,7 +8,7 @@ async function main() {
   const email = "nayanpatidar28@gmail.com";
   const existingUser = await prisma.user.findUnique({
     where: {
-      email: email, // Use the email to find the unique user
+      email: email,
     },
   });
 
